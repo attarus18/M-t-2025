@@ -1,0 +1,16 @@
+{
+  "short_name": "GalaxyWeather",
+  "name": "Galaxy Weather Samsung Style",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/1163/1163661.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#0f1026",
+  "background_color": "#0f1026",
+  "orientation": "portrait"
+}

@@ -1,0 +1,7 @@
+{
+  "name": "Galaxy Weather",
+  "description": "A Samsung OneUI-inspired weather application featuring dynamic gradients, smooth animations, and detailed forecasts using OpenWeatherMap.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
