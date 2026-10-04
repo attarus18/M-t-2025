@@ -15,10 +15,10 @@ npm run dev                         # http://localhost:9005
 ## Meteo e chiave OpenWeatherMap
 
 L'app non contiene la chiave: sito e APK chiamano il ponte `/api/meteo/` del sito
-https://meteo-zoo.vercel.app (`src/app/api/meteo/route.api.ts`), che aggiunge la chiave
+https://meteo-zoo.vercel.app (`src/app/api/meteo/route.ts`), che aggiunge la chiave
 lato server, tiene le risposte nella cache CDN e limita le richieste per IP.
 Il ponte esiste solo nella versione su Vercel e in `next dev`; la build locale per
-l'APK resta un export statico (vedi `next.config.ts`).
+l'APK resta un export statico (`npm run build:static`, usato da `cap:sync`).
 
 ## Illustrazioni degli animali
 

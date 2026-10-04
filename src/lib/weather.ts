@@ -1,4 +1,4 @@
-// Client del meteo: passa dal ponte /api/meteo del sito (src/app/api/meteo/route.api.ts),
+// Client del meteo: passa dal ponte /api/meteo del sito (src/app/api/meteo/route.ts),
 // che tiene la chiave OpenWeatherMap sul server. Dati del piano gratuito: meteo attuale,
 // previsioni 5 giorni / 3 ore, qualita' dell'aria, geocoding.
 // Anche l'APK chiama il sito pubblicato; NEXT_PUBLIC_WEATHER_API serve solo per provare

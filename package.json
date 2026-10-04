@@ -6,13 +6,14 @@
     "dev": "next dev --turbopack -p 9005",
     "build": "next build",
     "typecheck": "tsc --noEmit",
-    "cap:sync": "next build && npx cap sync android",
+    "cap:sync": "npm run build:static && npx cap sync android",
     "android:bundle": "npm run cap:sync && cd android && gradlew.bat bundleRelease",
     "android:apk": "npm run cap:sync && cd android && gradlew.bat assembleRelease",
     "images": "node scripts/process-images.mjs",
     "prompts": "tsx scripts/prompts.ts",
     "android:icons": "node resources/icon/build-icon.mjs && npx @capacitor/assets generate --android --iconBackgroundColor \"#2184fe\" --iconBackgroundColorDark \"#2184fe\" --splashBackgroundColor \"#46a6fd\" --splashBackgroundColorDark \"#46a6fd\"",
-    "import": "node scripts/import-downloads.mjs"
+    "import": "node scripts/import-downloads.mjs",
+    "build:static": "node scripts/build-static.mjs"
   },
   "dependencies": {
     "@capacitor-community/admob": "^8.1.0",

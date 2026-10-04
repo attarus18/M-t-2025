@@ -1,8 +1,7 @@
 /**
  * Ponte verso OpenWeatherMap: la chiave (OWM_API_KEY) resta sul server e non
- * finisce ne' nel sito ne' nell'APK. Attivo solo nella versione su Vercel: il
- * suffisso .api.ts viene riconosciuto solo quando non si fa l'export statico
- * (vedi pageExtensions in next.config.ts).
+ * finisce ne' nel sito ne' nell'APK. Attivo solo nella versione su Vercel: la
+ * build statica per l'APK (scripts/build-static.mjs) lascia fuori questa route.
  *
  * GET /api/meteo?tipo=attuale|previsioni|aria&lat=..&lon=..
  * GET /api/meteo?tipo=citta&q=..

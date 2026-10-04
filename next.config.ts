@@ -1,17 +1,16 @@
 import type { NextConfig } from 'next';
 
 // Due modalita':
-// - APK (npm run cap:sync / next build in locale): export statico in "out",
+// - APK (npm run build:static, usato da cap:sync): export statico in "out",
 //   impacchettato dentro l'APK/AAB (webDir in capacitor.config.ts);
 // - sito su Vercel (e next dev): app Next.js normale, che espone anche il ponte
 //   /api/meteo con la chiave OpenWeatherMap tenuta sul server.
-// Le route del server hanno il suffisso .api.ts e vengono incluse solo nella
-// seconda modalita'.
+// La build per l'APK si lancia con scripts/build-static.mjs, che toglie di mezzo
+// le route del server (src/app/api) incompatibili con l'export.
 const isServer = process.env.VERCEL === '1' || process.argv.includes('dev');
 
 const nextConfig: NextConfig = {
   output: isServer ? undefined : 'export',
-  pageExtensions: isServer ? ['tsx', 'ts', 'api.ts'] : ['tsx', 'ts'],
   trailingSlash: true,
   images: { unoptimized: true },
   eslint: {
