@@ -3,10 +3,10 @@
 import { Capacitor } from '@capacitor/core';
 import { KEYS, getStored, setStored } from './storage';
 
-// Unita' dell'app su AdMob: finche' non si crea l'app "Meteo Zoo" si usano gli ID di test di Google.
+// Unita' dell'app "Meteo Zoo" su AdMob (App ID in AndroidManifest.xml).
 // Non sono segreti: finiscono comunque nell'APK. Si possono sovrascrivere da .env.local.
-const DEFAULT_BANNER_ID = 'ca-app-pub-3940256099942544/6300978111';
-const DEFAULT_INTERSTITIAL_ID = 'ca-app-pub-3940256099942544/1033173712';
+const DEFAULT_BANNER_ID = 'ca-app-pub-4870944787959973/5343201210';
+const DEFAULT_INTERSTITIAL_ID = 'ca-app-pub-4870944787959973/4782954705';
 
 export const BANNER_AD_ID = process.env.NEXT_PUBLIC_ADMOB_BANNER_AD_UNIT_ID_ANDROID || DEFAULT_BANNER_ID;
 const INTERSTITIAL_AD_ID = process.env.NEXT_PUBLIC_ADMOB_INTERSTITIAL_AD_UNIT_ID_ANDROID || DEFAULT_INTERSTITIAL_ID;

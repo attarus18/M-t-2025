@@ -21,11 +21,10 @@
             </intent-filter>
         </activity>
 
-        <!-- AdMob App ID. Finche' non si crea l'app "Meteo Zoo" su admob.google.com
-             si usa l'App ID di test di Google (con quello reale va sostituito prima della release). -->
+        <!-- AdMob App ID dell'app "Meteo Zoo" (admob.google.com). -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713"
+            android:value="ca-app-pub-4870944787959973~7444862789"
         />
 
         <provider
