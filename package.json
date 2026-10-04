@@ -1,23 +1,46 @@
 {
-  "name": "galaxy-weather",
-  "private": true,
+  "name": "previsioni-animali",
   "version": "1.0.0",
-  "type": "module",
+  "private": true,
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "dev": "next dev --turbopack -p 9005",
+    "build": "next build",
+    "typecheck": "tsc --noEmit",
+    "cap:sync": "next build && npx cap sync android",
+    "android:bundle": "npm run cap:sync && cd android && gradlew.bat bundleRelease",
+    "android:apk": "npm run cap:sync && cd android && gradlew.bat assembleRelease",
+    "images": "node scripts/process-images.mjs",
+    "prompts": "tsx scripts/prompts.ts",
+    "android:icons": "node resources/icon/build-icon.mjs && npx @capacitor/assets generate --android --iconBackgroundColor \"#2184fe\" --iconBackgroundColorDark \"#2184fe\" --splashBackgroundColor \"#46a6fd\" --splashBackgroundColorDark \"#46a6fd\"",
+    "import": "node scripts/import-downloads.mjs"
   },
   "dependencies": {
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "lucide-react": "^0.344.0"
+    "@capacitor-community/admob": "^8.1.0",
+    "@capacitor/android": "^8.5.0",
+    "@capacitor/app": "^8.1.1",
+    "@capacitor/cli": "^8.5.0",
+    "@capacitor/core": "^8.5.0",
+    "@capacitor/filesystem": "^8.1.3",
+    "@capacitor/geolocation": "^8.0.0",
+    "@capacitor/share": "^8.0.2",
+    "@capacitor/splash-screen": "^8.0.2",
+    "@capgo/native-purchases": "^8.8.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.475.0",
+    "next": "15.5.9",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
+    "tailwind-merge": "^3.0.1",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
-    "@types/react": "^18.3.3",
-    "@types/react-dom": "^18.3.0",
-    "@vitejs/plugin-react": "^4.3.1",
-    "typescript": "^5.5.3",
-    "vite": "^5.4.1"
+    "@capacitor/assets": "^3.0.5",
+    "@types/node": "^20",
+    "@types/react": "^19.2.1",
+    "@types/react-dom": "^19.2.1",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
+    "tsx": "^4.23.15",
+    "typescript": "^5"
   }
 }

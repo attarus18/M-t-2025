@@ -1,0 +1,262 @@
+/*
+ * Animazioni degli animali e degli effetti meteo. Solo transform e opacity:
+ * restano fluide anche sui telefoni economici (niente ricalcolo del layout).
+ */
+
+/* ---------- Movimenti del corpo (origine ai piedi dell'animale) ---------- */
+
+.pa-body {
+  transform-origin: 50% 92%;
+  will-change: transform;
+}
+
+/* sole, nuvoloso: dondolio rilassato */
+@keyframes pa-bob {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-8px) rotate(2deg); }
+}
+.pa-move-bob { animation: pa-bob 3.2s ease-in-out infinite; }
+
+/* notte: respiro lento, sta dormendo */
+@keyframes pa-breathe {
+  0%, 100% { transform: scale(1, 1); }
+  50% { transform: scale(1.025, 0.975); }
+}
+.pa-move-breathe { animation: pa-breathe 4s ease-in-out infinite; }
+
+/* pioggia, neve: saltelli con schiacciamento */
+@keyframes pa-hop {
+  0%, 60%, 100% { transform: translateY(0) scale(1, 1); }
+  10% { transform: translateY(0) scale(1.08, 0.9); }
+  30% { transform: translateY(-26px) scale(0.95, 1.06); }
+  50% { transform: translateY(0) scale(1.06, 0.93); }
+}
+.pa-move-hop { animation: pa-hop 1.8s ease-in-out infinite; }
+
+/* freddo, temporale: brividi */
+@keyframes pa-shiver {
+  0%, 100% { transform: translateX(0) rotate(0); }
+  25% { transform: translateX(-2.5px) rotate(-0.8deg); }
+  75% { transform: translateX(2.5px) rotate(0.8deg); }
+}
+.pa-move-shiver { animation: pa-shiver 0.16s linear infinite; }
+
+/* vento: piegato controvento, con le raffiche */
+@keyframes pa-lean {
+  0%, 100% { transform: rotate(-4deg) skewX(2deg); }
+  40% { transform: rotate(-10deg) skewX(5deg) translateX(-6px); }
+  55% { transform: rotate(-7deg) skewX(3deg); }
+}
+.pa-move-lean { animation: pa-lean 1.4s ease-in-out infinite; }
+
+/* caldo: si "scioglie" */
+@keyframes pa-melt {
+  0%, 100% { transform: scale(1, 1); }
+  50% { transform: scale(1.06, 0.93); }
+}
+.pa-move-melt { animation: pa-melt 2.6s ease-in-out infinite; }
+
+/* nebbia: avanza a tentoni */
+@keyframes pa-drift {
+  0%, 100% { transform: translateX(-8px) rotate(-1.5deg); opacity: 0.88; }
+  50% { transform: translateX(8px) rotate(1.5deg); opacity: 1; }
+}
+.pa-move-drift { animation: pa-drift 5s ease-in-out infinite; }
+
+/* ---------- Effetti meteo ---------- */
+
+.pa-fx {
+  position: fixed;
+  inset: 0;
+  z-index: -5;
+  overflow: hidden;
+  pointer-events: none;
+}
+.pa-fx > * {
+  position: absolute;
+  will-change: transform, opacity;
+}
+
+/* pioggia */
+@keyframes pa-fall {
+  from { transform: translate3d(0, -15vh, 0) rotate(12deg); }
+  to { transform: translate3d(-12vh, 115vh, 0) rotate(12deg); }
+}
+.pa-drop {
+  top: 0;
+  width: 2px;
+  height: 22px;
+  border-radius: 2px;
+  background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.75));
+  animation: pa-fall linear infinite;
+}
+
+/* neve */
+@keyframes pa-snow {
+  0% { transform: translate3d(0, -10vh, 0); }
+  25% { transform: translate3d(14px, 20vh, 0); }
+  50% { transform: translate3d(-10px, 50vh, 0); }
+  75% { transform: translate3d(12px, 80vh, 0); }
+  100% { transform: translate3d(0, 110vh, 0); }
+}
+.pa-flake {
+  top: 0;
+  border-radius: 9999px;
+  background: #fff;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
+  animation: pa-snow linear infinite;
+}
+
+/* stelle */
+@keyframes pa-twinkle {
+  0%, 100% { opacity: 0.25; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+.pa-star {
+  border-radius: 9999px;
+  background: #fff;
+  box-shadow: 0 0 6px #fff;
+  animation: pa-twinkle ease-in-out infinite;
+}
+
+/* stella cadente */
+@keyframes pa-shoot {
+  0%, 88% { opacity: 0; transform: translate3d(0, 0, 0) rotate(-25deg); }
+  90% { opacity: 1; }
+  100% { opacity: 0; transform: translate3d(-45vw, 22vh, 0) rotate(-25deg); }
+}
+.pa-shooting {
+  top: 12%;
+  right: 5%;
+  width: 90px;
+  height: 2px;
+  background: linear-gradient(to left, transparent, #fff);
+  animation: pa-shoot 9s ease-out infinite;
+}
+
+/* nuvole e banchi di nebbia che scorrono */
+@keyframes pa-cross {
+  from { transform: translate3d(-60vw, 0, 0); }
+  to { transform: translate3d(110vw, 0, 0); }
+}
+.pa-cloud {
+  left: 0;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.55);
+  filter: blur(6px);
+  animation: pa-cross linear infinite;
+}
+.pa-cloud::before,
+.pa-cloud::after {
+  content: '';
+  position: absolute;
+  border-radius: 9999px;
+  background: inherit;
+}
+.pa-cloud::before { width: 55%; height: 140%; left: 15%; bottom: 30%; }
+.pa-cloud::after { width: 40%; height: 110%; right: 12%; bottom: 25%; }
+
+.pa-fog {
+  left: 0;
+  width: 140vw;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.28);
+  filter: blur(18px);
+  animation: pa-cross linear infinite;
+}
+
+/* lampo del temporale */
+@keyframes pa-flash {
+  0%, 89%, 93%, 100% { opacity: 0; }
+  90%, 92% { opacity: 0.75; }
+  91% { opacity: 0.2; }
+}
+.pa-lightning {
+  inset: 0;
+  background: #fff;
+  animation: pa-flash 6s linear infinite;
+}
+
+/* vento: scie e foglie */
+@keyframes pa-gust {
+  from { transform: translate3d(110vw, 0, 0); opacity: 0; }
+  15% { opacity: 1; }
+  85% { opacity: 1; }
+  to { transform: translate3d(-40vw, 0, 0); opacity: 0; }
+}
+.pa-streak {
+  left: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(to left, transparent, rgba(255, 255, 255, 0.8), transparent);
+  animation: pa-gust linear infinite;
+}
+@keyframes pa-leaf {
+  from { transform: translate3d(110vw, 0, 0) rotate(0deg); }
+  50% { transform: translate3d(35vw, 8vh, 0) rotate(400deg); }
+  to { transform: translate3d(-20vw, -4vh, 0) rotate(820deg); }
+}
+.pa-leaf {
+  left: 0;
+  animation: pa-leaf linear infinite;
+}
+
+/* sole: raggi che ruotano e bagliore che pulsa */
+@keyframes pa-spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes pa-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.85; }
+  50% { transform: scale(1.12); opacity: 1; }
+}
+.pa-sunrays {
+  top: -140px;
+  right: -140px;
+  width: 380px;
+  height: 380px;
+  border-radius: 9999px;
+  background: repeating-conic-gradient(rgba(255, 255, 255, 0.22) 0 8deg, transparent 8deg 24deg);
+  mask-image: radial-gradient(circle, #000 30%, transparent 70%);
+  -webkit-mask-image: radial-gradient(circle, #000 30%, transparent 70%);
+  animation: pa-spin 40s linear infinite;
+}
+.pa-sunglow {
+  top: -70px;
+  right: -70px;
+  width: 220px;
+  height: 220px;
+  border-radius: 9999px;
+  background: radial-gradient(circle, #fff7c2 0%, #ffd54f 45%, transparent 70%);
+  animation: pa-pulse 4s ease-in-out infinite;
+}
+
+/* caldo: aria che tremola verso l'alto */
+@keyframes pa-rise {
+  from { transform: translate3d(0, 20vh, 0) scaleX(1); opacity: 0; }
+  30% { opacity: 0.5; }
+  to { transform: translate3d(0, -30vh, 0) scaleX(1.4); opacity: 0; }
+}
+.pa-heat {
+  bottom: 0;
+  width: 30vw;
+  height: 40vh;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(255, 255, 255, 0.18), transparent 70%);
+  filter: blur(8px);
+  animation: pa-rise ease-in infinite;
+}
+
+/* gelo: scintille di brina */
+.pa-sparkle {
+  color: #e0f2fe;
+  text-shadow: 0 0 8px #fff;
+  animation: pa-twinkle ease-in-out infinite;
+}
+
+/* Chi ha chiesto meno movimento nelle impostazioni del telefono vede tutto fermo. */
+@media (prefers-reduced-motion: reduce) {
+  .pa-body,
+  .pa-fx > * {
+    animation: none !important;
+  }
+}
