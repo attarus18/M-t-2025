@@ -1,8 +1,9 @@
-// Client OpenWeatherMap (piano gratuito: meteo attuale, previsioni 5 giorni / 3 ore,
-// qualita' dell'aria, geocoding). L'app e' un export statico, quindi la chiave
-// viaggia nel bundle: va usata una chiave dedicata e rigenerabile.
-const BASE = 'https://api.openweathermap.org';
-const API_KEY = process.env.NEXT_PUBLIC_OWM_API_KEY ?? '';
+// Client del meteo: passa dal ponte /api/meteo del sito (src/app/api/meteo/route.api.ts),
+// che tiene la chiave OpenWeatherMap sul server. Dati del piano gratuito: meteo attuale,
+// previsioni 5 giorni / 3 ore, qualita' dell'aria, geocoding.
+// Anche l'APK chiama il sito pubblicato; NEXT_PUBLIC_WEATHER_API serve solo per provare
+// un ponte diverso (es. http://localhost:9005/api/meteo/ con next dev).
+const API = process.env.NEXT_PUBLIC_WEATHER_API || 'https://meteo-zoo.vercel.app/api/meteo/';
 
 export interface WeatherCondition {
   id: number;
@@ -68,35 +69,36 @@ export class WeatherError extends Error {
   }
 }
 
-async function get<T>(path: string, params: Record<string, string | number>): Promise<T> {
-  if (!API_KEY) throw new WeatherError('Chiave OpenWeatherMap mancante (NEXT_PUBLIC_OWM_API_KEY).', 'key');
-  const query = new URLSearchParams({ ...Object.fromEntries(Object.entries(params).map(([k, v]) => [k, String(v)])), appid: API_KEY });
+type Tipo = 'attuale' | 'previsioni' | 'aria' | 'citta';
+
+/** Coordinate a 2 decimali (~1 km), come le arrotonda il ponte: stessa URL = risposta dalla cache. */
+const round = (n: number) => n.toFixed(2);
+
+async function get<T>(tipo: Tipo, params: Record<string, string>): Promise<T> {
+  const query = new URLSearchParams({ tipo, ...params });
   let res: Response;
   try {
-    res = await fetch(`${BASE}${path}?${query}`);
+    res = await fetch(`${API}?${query}`);
   } catch {
     throw new WeatherError('Nessuna connessione internet. Controlla Wi-Fi o dati.', 'network');
   }
-  if (res.status === 401) throw new WeatherError('Chiave OpenWeatherMap non valida o non ancora attiva.', 'key');
   if (res.status === 404) throw new WeatherError('Località non trovata.', 'notfound');
   if (res.status === 429) throw new WeatherError('Troppe richieste, riprova tra un minuto.', 'general');
   if (!res.ok) throw new WeatherError('Servizio meteo non disponibile, riprova.', 'general');
   return res.json() as Promise<T>;
 }
 
-const common = { units: 'metric', lang: 'it' };
-
 export function fetchCurrent(lat: number, lon: number) {
-  return get<CurrentWeather>('/data/2.5/weather', { lat, lon, ...common });
+  return get<CurrentWeather>('attuale', { lat: round(lat), lon: round(lon) });
 }
 
 export function fetchForecast(lat: number, lon: number) {
-  return get<Forecast>('/data/2.5/forecast', { lat, lon, ...common });
+  return get<Forecast>('previsioni', { lat: round(lat), lon: round(lon) });
 }
 
 export async function fetchAirQuality(lat: number, lon: number): Promise<AirQualityIndex | null> {
   try {
-    const data = await get<{ list: { main: { aqi: AirQualityIndex } }[] }>('/data/2.5/air_pollution', { lat, lon });
+    const data = await get<{ list: { main: { aqi: AirQualityIndex } }[] }>('aria', { lat: round(lat), lon: round(lon) });
     return data.list[0]?.main.aqi ?? null;
   } catch {
     return null;
@@ -105,8 +107,8 @@ export async function fetchAirQuality(lat: number, lon: number): Promise<AirQual
 
 export async function searchCities(query: string): Promise<CitySearchResult[]> {
   const data = await get<{ name: string; local_names?: Record<string, string>; country: string; state?: string; lat: number; lon: number }[]>(
-    '/geo/1.0/direct',
-    { q: query, limit: 5 },
+    'citta',
+    { q: query },
   );
   return data.map(c => ({
     name: c.name,

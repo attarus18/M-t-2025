@@ -7,10 +7,18 @@ AdMob per la versione gratuita e pacchetti di animali a vita con Google Play Bil
 ## Sviluppo
 
 ```bash
-cp .env.local.example .env.local   # inserire NEXT_PUBLIC_OWM_API_KEY
+cp .env.local.example .env.local   # inserire OWM_API_KEY (serve solo al ponte /api/meteo)
 npm install
 npm run dev                         # http://localhost:9005
 ```
+
+## Meteo e chiave OpenWeatherMap
+
+L'app non contiene la chiave: sito e APK chiamano il ponte `/api/meteo/` del sito
+https://meteo-zoo.vercel.app (`src/app/api/meteo/route.api.ts`), che aggiunge la chiave
+lato server, tiene le risposte nella cache CDN e limita le richieste per IP.
+Il ponte esiste solo nella versione su Vercel e in `next dev`; la build locale per
+l'APK resta un export statico (vedi `next.config.ts`).
 
 ## Illustrazioni degli animali
 
