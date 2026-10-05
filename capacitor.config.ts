@@ -12,6 +12,11 @@ const config: CapacitorConfig = {
       androidScaleType: 'CENTER_INSIDE',
       showSpinner: false,
     },
+    LocalNotifications: {
+      // Notifica giornaliera col meteo (src/lib/daily-notification.ts)
+      smallIcon: 'ic_stat_meteo',
+      iconColor: '#2184fe',
+    },
   },
 };
 

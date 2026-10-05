@@ -60,4 +60,8 @@ export const KEYS = {
   refreshCount: 'pa-refresh-count',
   /** Pagina del pager meteo: 'gps' oppure l'id di una citta' salvata. */
   currentCity: 'pa-current-city',
+  /** Notifica giornaliera col meteo: attiva e ora (vedi daily-notification.ts). */
+  dailyNotification: 'pa-daily-notification',
+  /** Ultima posizione GPS riuscita, usata per le previsioni della notifica. */
+  lastPosition: 'pa-last-position',
 } as const;

@@ -37,11 +37,17 @@ export default function PrivacyPage() {
         <h2 className="text-lg font-semibold">Posizione e dati meteo (OpenWeatherMap)</h2>
         <p>
           Se lo consenti, l&apos;app usa la posizione approssimativa del dispositivo solo per mostrarti il meteo del
-          luogo in cui ti trovi. Le coordinate e i nomi delle città che cerchi vengono inviati direttamente dal tuo
-          dispositivo a OpenWeatherMap Ltd (Regno Unito), che fornisce i dati meteo, senza passare dai nostri server e
-          senza essere associati a te. Non conserviamo la tua posizione. Puoi negare o revocare il permesso dalle
-          impostazioni di Android e usare comunque l&apos;app cercando le città a mano. Informativa di OpenWeatherMap:{' '}
+          luogo in cui ti trovi. Le coordinate (arrotondate a circa 1 km) e i nomi delle città che cerchi passano dal
+          nostro servizio su Vercel Inc. (meteo-zoo.vercel.app), che le inoltra a OpenWeatherMap Ltd (Regno Unito) per
+          ottenere i dati meteo, senza associarle a te e senza conservarle. L&apos;ultima posizione rilevata resta solo
+          sul tuo dispositivo. Puoi negare o revocare il permesso dalle impostazioni di Android e usare comunque
+          l&apos;app cercando le città a mano. Informativa di OpenWeatherMap:{' '}
           <span className="font-semibold">openweather.co.uk/privacy-policy</span>.
+        </p>
+        <p>
+          Se attivi la notifica &quot;Meteo del giorno&quot;, l&apos;app prepara sul dispositivo le notifiche dei prossimi
+          giorni usando l&apos;ultima posizione rilevata. Non usiamo servizi di notifica push e non riceviamo dati su di
+          te. Puoi disattivarla in Altro &gt; Notifiche o dalle impostazioni di Android.
         </p>
       </section>
 

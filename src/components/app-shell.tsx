@@ -5,6 +5,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { Capacitor } from '@capacitor/core';
 import { BottomNav } from '@/components/bottom-nav';
 import { AdBanner } from '@/components/ad-banner';
+import { scheduleDailyWeather } from '@/lib/daily-notification';
 
 /** Tasto "indietro" di Android: chiude i pannelli aperti, torna indietro, dalla home chiude l'app. */
 function useAndroidBackButton() {
@@ -35,8 +36,29 @@ function useAndroidBackButton() {
   }, [pathname, router]);
 }
 
+/** Notifica giornaliera: si riprogramma all'avvio e ogni volta che l'app torna in primo piano. */
+function useDailyNotificationRefresh() {
+  useEffect(() => {
+    if (!Capacitor.isNativePlatform()) return;
+    scheduleDailyWeather();
+    let handle: { remove: () => void } | undefined;
+    let cancelled = false;
+    (async () => {
+      const { App } = await import('@capacitor/app');
+      const registered = await App.addListener('resume', () => scheduleDailyWeather());
+      if (cancelled) registered.remove();
+      else handle = registered;
+    })();
+    return () => {
+      cancelled = true;
+      handle?.remove();
+    };
+  }, []);
+}
+
 export function AppShell({ children }: { children: ReactNode }) {
   useAndroidBackButton();
+  useDailyNotificationRefresh();
 
   return (
     <>

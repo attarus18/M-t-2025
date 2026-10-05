@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -42,4 +43,7 @@
     <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
     <!-- Per il meteo basta la posizione approssimativa: niente GPS preciso, niente background. -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- La notifica giornaliera non ha bisogno dell'orario esatto: senza questo permesso
+         (riservato da Google Play a sveglie e calendari) Android la consegna con qualche minuto di tolleranza. -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" tools:node="remove" />
 </manifest>

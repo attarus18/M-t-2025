@@ -6,8 +6,8 @@
  *
  * - icon-only.png: immagine intera (icone quadrate classiche e Play Store);
  * - icon-background.png: lo stesso cielo sfumato dell'illustrazione;
- * - icon-foreground.png: il pollo rimpicciolito e sfumato ai bordi, perche'
- *   le icone adattive di Android ritagliano circa il 17% per lato.
+ * - icon-foreground.png: l'illustrazione intera, cosi' il pollo riempie tutta
+ *   l'icona adattiva (l'inset del 16,7% e' gia' nell'XML di @capacitor/assets).
  */
 import sharp from 'sharp';
 
@@ -41,11 +41,12 @@ async function feathered(size) {
 await sharp(SRC).resize(1024, 1024).png().toFile('resources/icon-only.png');
 await sharp(SRC).resize(512, 512).png().toFile('resources/play-store-icon-512.png');
 
-// Icona adattiva: sfondo cielo + pollo al 64%, sfumato.
+// Icona adattiva: sfondo cielo + illustrazione intera. L'XML generato da @capacitor/assets
+// applica gia' un inset del 16,7%, quindi il primo piano coincide con la parte visibile.
 await sharp(gradient(1024, 1024)).png().toFile('resources/icon-background.png');
-const fgSize = 660; // ~64% di 1024: tutto dentro la zona visibile (66%) delle icone rotonde
+const fgSize = 1024;
 await sharp({ create: { width: 1024, height: 1024, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } })
-  .composite([{ input: await feathered(fgSize), top: (1024 - fgSize) / 2, left: (1024 - fgSize) / 2 }])
+  .composite([{ input: await sharp(SRC).resize(fgSize, fgSize).png().toBuffer(), top: (1024 - fgSize) / 2, left: (1024 - fgSize) / 2 }])
   .png()
   .toFile('resources/icon-foreground.png');
 

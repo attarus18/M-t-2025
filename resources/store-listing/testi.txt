@@ -1,0 +1,35 @@
+NOME (max 30)
+Meteo Zoo
+
+DESCRIZIONE BREVE (max 80)
+Il meteo raccontato da 26 animali buffi, vestiti per ogni tempo che fa!
+
+DESCRIZIONE COMPLETA (max 4000)
+Che tempo fa? Chiedilo a un pollo con gli occhiali da sole!
+
+Meteo Zoo trasforma le previsioni del tempo in un sorriso: un animale vestito a tema ti racconta il meteo della tua città con una frase divertente. Se c'è il sole si mette gli occhiali, se piove apre l'ombrello, se nevica costruisce un pupazzo di neve, se tira vento si tiene stretta la sciarpa.
+
+☀️ PREVISIONI COMPLETE
+• Meteo attuale nella tua posizione o nelle città che salvi
+• Previsioni ora per ora e per i prossimi 5 giorni
+• Temperatura percepita, minima e massima, vento, umidità e probabilità di pioggia
+• Qualità dell'aria
+• Dettaglio a schermo intero per ogni ora e ogni giorno
+
+🐔 26 ANIMALI METEOROLOGI
+Ogni animale ha 10 illustrazioni diverse, una per ogni situazione: sole, notte serena, nuvole, pioggia, temporale, neve, nebbia, vento, caldo torrido e gelo. E per ognuna, frasi buffe sempre nuove.
+
+🎁 PACCHETTI DI ANIMALI
+Il pollo e il gatto sono gratis per tutti. Gli altri arrivano a pacchetti:
+• Fattoria: mucca, maiale, pecora, cavallo e asinello
+• Mare e Polo: pinguino, polpo, delfino, granchio, tartaruga e orca
+• Bosco e Stagno: rana, volpe, riccio, gufo e scoiattolo
+• Amici di casa: cane, coniglio, criceto e pappagallo
+• Esotici: panda, scimmia, giraffa e leone
+
+Ogni pacchetto si compra una volta sola e resta tuo per sempre, senza abbonamenti. Con "Tutti i pacchetti" sblocchi ogni animale, anche quelli che arriveranno in futuro. Con qualsiasi acquisto sparisce anche la pubblicità.
+
+📤 CONDIVIDI IL METEO
+Manda agli amici l'immagine del meteo di oggi con il tuo animale preferito.
+
+Dati meteo forniti da OpenWeatherMap.

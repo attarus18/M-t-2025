@@ -10,6 +10,7 @@ import {
   type CurrentWeather,
   type Forecast,
 } from './weather';
+import { saveLastPosition } from './daily-notification';
 import { getCurrentPosition, LocationError, type SavedCity } from './location';
 
 export interface WeatherBundle {
@@ -33,6 +34,8 @@ async function load(target: 'gps' | SavedCity): Promise<WeatherBundle> {
     fetchForecast(coords.lat, coords.lon).catch(() => null),
     fetchAirQuality(coords.lat, coords.lon),
   ]);
+  // La notifica giornaliera usa l'ultima posizione GPS riuscita.
+  if (target === 'gps') saveLastPosition({ ...coords, name: current.name });
   return { current, forecast, air, coords, loadedAt: Date.now() };
 }
 
