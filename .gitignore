@@ -28,3 +28,6 @@ android/app/*.keystore
 # illustrazioni originali in alta risoluzione (283 MB): restano in locale, nell'app vanno quelle di public/animali
 resources/animali-originali/*/
 .vercel
+
+# materiale per i social (Cowork), generato
+Post/

@@ -3,7 +3,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { Capacitor } from '@capacitor/core';
 import type { Animal } from '@/lib/animals';
-import { ALL_PACKS_PRODUCT, PAID_PRODUCT_IDS, getPack, type PackId } from '@/lib/packs';
+import { ALL_PACKS_PRODUCT, PACKS, PAID_PRODUCT_IDS, getPack, type PackId } from '@/lib/packs';
 import { KEYS, getStored, setStored } from '@/lib/storage';
 
 /**
@@ -19,6 +19,8 @@ interface PurchasesContextType {
   hasPurchased: boolean;
   /** Ha "Tutti i pacchetti" (inclusi quelli futuri). */
   hasAll: boolean;
+  /** Possiede ogni pacchetto di oggi: con "Tutti i pacchetti" o comprandoli uno a uno. */
+  hasEveryPack: boolean;
   isPackUnlocked: (pack: PackId) => boolean;
   isAnimalUnlocked: (animal: Animal) => boolean;
   /** Prezzi localizzati da Google Play per ID prodotto (manca se il prodotto non e' disponibile). */
@@ -141,6 +143,7 @@ export function PurchasesProvider({ children }: { children: ReactNode }) {
       isLoading,
       hasPurchased: owned.length > 0,
       hasAll,
+      hasEveryPack: PACKS.every(p => isPackUnlocked(p.id)),
       isPackUnlocked,
       isAnimalUnlocked: animal => isPackUnlocked(animal.pack),
       prices,

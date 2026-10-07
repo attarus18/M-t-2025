@@ -13,7 +13,7 @@ const PAID_PACKS = PACKS.filter(p => p.productId);
 
 /** Negozio: pacchetti singoli a vita e "Tutti i pacchetti" (anche futuri). */
 export default function ShopPage() {
-  const { hasAll, isPackUnlocked, restore } = usePurchases();
+  const { hasAll, hasEveryPack, isPackUnlocked, restore } = usePurchases();
   const [isNative, setIsNative] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   useEffect(() => setIsNative(Capacitor.isNativePlatform()), []);
@@ -58,6 +58,11 @@ export default function ShopPage() {
         <div className="mt-4">
           {hasAll ? (
             <p className="rounded-2xl bg-white/70 p-3 text-center font-fun font-bold">Ce l&apos;hai già. Grazie! 💛</p>
+          ) : hasEveryPack ? (
+            // Ha comprato i pacchetti uno a uno: non gli si rivende cio' che ha gia'.
+            <p className="rounded-2xl bg-white/70 p-3 text-center font-fun font-bold">
+              Hai già tutti i pacchetti. Grazie! 💛
+            </p>
           ) : (
             <BuyButton productId={ALL_PACKS_PRODUCT} label="Sblocca tutto" className="bg-white text-orange-700" />
           )}

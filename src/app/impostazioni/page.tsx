@@ -16,10 +16,10 @@ import {
 import { KEYS, useStored } from '@/lib/storage';
 import { useAnimal } from '@/lib/use-animal';
 
-const APP_VERSION = '1.0.1';
+const APP_VERSION = '1.0.2';
 
 export default function SettingsPage() {
-  const { hasAll, restore } = usePurchases();
+  const { hasAll, hasEveryPack, restore } = usePurchases();
   const { animal } = useAnimal();
   const [showPrivacy, setShowPrivacy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
@@ -43,8 +43,12 @@ export default function SettingsPage() {
       <h1 className="font-fun text-3xl font-bold drop-shadow">Altro</h1>
 
       <Section title="Pacchetti animali" icon={ShoppingBag}>
-        {hasAll && <p className="py-2 font-semibold">Hai tutti i pacchetti, anche quelli futuri. {animal.emoji}</p>}
-        <Row href="/premium/">{hasAll ? 'Vedi i pacchetti' : 'Negozio dei pacchetti'}</Row>
+        {hasAll ? (
+          <p className="py-2 font-semibold">Hai tutti i pacchetti, anche quelli futuri. {animal.emoji}</p>
+        ) : (
+          hasEveryPack && <p className="py-2 font-semibold">Hai tutti i pacchetti. {animal.emoji}</p>
+        )}
+        <Row href="/premium/">{hasEveryPack ? 'Vedi i pacchetti' : 'Negozio dei pacchetti'}</Row>
         <Row onClick={onRestore}>Ripristina acquisti</Row>
         {notice && <p className="pt-2 text-sm font-semibold opacity-90">{notice}</p>}
       </Section>

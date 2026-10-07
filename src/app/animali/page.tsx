@@ -14,7 +14,7 @@ import { cn } from '@/lib/utils';
 
 export default function AnimalsPage() {
   const { animal: current, setAnimal } = useAnimal();
-  const { isAnimalUnlocked, isPackUnlocked, hasAll } = usePurchases();
+  const { isAnimalUnlocked, isPackUnlocked, hasEveryPack } = usePurchases();
   const [preview, setPreview] = useState<Animal | null>(null);
 
   return (
@@ -101,7 +101,7 @@ export default function AnimalsPage() {
         );
       })}
 
-      {!hasAll && (
+      {!hasEveryPack && (
         <Link
           href="/premium/"
           className="flex items-center justify-center gap-2 rounded-full bg-white py-4 font-fun text-lg font-bold text-sky-700 shadow-lg active:scale-95"
