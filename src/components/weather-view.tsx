@@ -7,6 +7,7 @@ import { AnimalArt } from '@/components/animal-art';
 import { ForecastSheet, type SheetItem } from '@/components/forecast-sheet';
 import { WeatherEffects } from '@/components/weather-effects';
 import { ShareButton } from '@/components/share-button';
+import { WeatherSource } from '@/components/weather-source';
 import { pickPhrase, type Animal } from '@/lib/animals';
 import { CONDITION_INFO, pickCondition, type ConditionId } from '@/lib/conditions';
 import type { WeatherBundle, WeatherLoadError } from '@/lib/use-weather';
@@ -116,6 +117,7 @@ export function WeatherView({
         <span className="mt-4 text-5xl">°</span>
       </div>
       <p className="text-lg font-bold capitalize opacity-95">{current.weather[0].description}</p>
+      <WeatherSource className="mt-0.5" />
       <div className="mt-3 flex gap-5 rounded-full bg-black/20 px-5 py-2 text-sm font-semibold backdrop-blur-md">
         <span>
           <span className="opacity-60">Max</span> {Math.round(today?.max ?? current.main.temp_max)}°

@@ -5,6 +5,7 @@ import { ChevronLeft, Droplets, Thermometer, Umbrella, Wind } from 'lucide-react
 import { AnimalArt } from '@/components/animal-art';
 import { WeatherEffects } from '@/components/weather-effects';
 import { ShareButton } from '@/components/share-button';
+import { WeatherSource } from '@/components/weather-source';
 import { pickPhrase, type Animal } from '@/lib/animals';
 import { CONDITION_INFO, type ConditionId } from '@/lib/conditions';
 import { kmh, type ForecastItem } from '@/lib/weather';
@@ -110,6 +111,7 @@ export function ForecastSheet({
               {Math.round(sheet.min)}°
             </p>
           )}
+          <WeatherSource className="mt-2" />
         </div>
 
         <div className="grid grid-cols-2 gap-3">

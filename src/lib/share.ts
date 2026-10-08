@@ -137,6 +137,10 @@ export async function renderForecastImage(f: ShareForecast): Promise<string> {
   ctx.font = `700 34px ${fun}`;
   ctx.globalAlpha = 0.85;
   ctx.fillText(`${f.animal.emoji} Meteo Zoo`, W / 2, H - 70);
+  // Fonte dei dati (richiesta da OpenWeatherMap)
+  ctx.font = `600 24px ${body}`;
+  ctx.globalAlpha = 0.65;
+  ctx.fillText('Dati meteo: OpenWeather', W / 2, H - 32);
   ctx.globalAlpha = 1;
 
   return canvas.toDataURL('image/png');
