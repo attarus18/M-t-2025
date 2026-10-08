@@ -16,7 +16,7 @@ import {
 import { KEYS, useStored } from '@/lib/storage';
 import { useAnimal } from '@/lib/use-animal';
 
-const APP_VERSION = '1.0.2';
+const APP_VERSION = '1.0.3';
 
 export default function SettingsPage() {
   const { hasAll, hasEveryPack, restore } = usePurchases();

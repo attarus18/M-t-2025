@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Sfondo del widget per la scena "pioggia" (colori di CONDITION_INFO in src/lib/conditions.ts). -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <gradient android:angle="270" android:startColor="#3a4b66" android:endColor="#6a7a92" />
+    <corners android:radius="24dp" />
+</shape>

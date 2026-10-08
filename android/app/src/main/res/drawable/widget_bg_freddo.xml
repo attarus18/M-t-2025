@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Sfondo del widget per la scena "freddo" (colori di CONDITION_INFO in src/lib/conditions.ts). -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <gradient android:angle="270" android:startColor="#3b6fa8" android:endColor="#a9d4f5" />
+    <corners android:radius="24dp" />
+</shape>

@@ -51,7 +51,7 @@ export async function requestNotificationPermission(): Promise<boolean> {
 }
 
 /** Animale da usare fuori da React: quello scelto, se il suo pacchetto risulta acquistato. */
-function chosenAnimal() {
+export function chosenAnimal() {
   const animal = getAnimal(getStored<string>(KEYS.animal, DEFAULT_ANIMAL));
   const productId = getPack(animal.pack).productId;
   if (!productId) return animal;

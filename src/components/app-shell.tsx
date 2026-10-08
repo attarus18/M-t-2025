@@ -6,6 +6,8 @@ import { Capacitor } from '@capacitor/core';
 import { BottomNav } from '@/components/bottom-nav';
 import { AdBanner } from '@/components/ad-banner';
 import { scheduleDailyWeather } from '@/lib/daily-notification';
+import { useAnimal } from '@/lib/use-animal';
+import { syncWidgetAnimal } from '@/lib/widget';
 
 /** Tasto "indietro" di Android: chiude i pannelli aperti, torna indietro, dalla home chiude l'app. */
 function useAndroidBackButton() {
@@ -56,9 +58,18 @@ function useDailyNotificationRefresh() {
   }, []);
 }
 
+/** Widget della schermata home: segue l'animale scelto (anche dopo acquisti o rimborsi). */
+function useWidgetAnimalSync() {
+  const { animal } = useAnimal();
+  useEffect(() => {
+    syncWidgetAnimal();
+  }, [animal.id]);
+}
+
 export function AppShell({ children }: { children: ReactNode }) {
   useAndroidBackButton();
   useDailyNotificationRefresh();
+  useWidgetAnimalSync();
 
   return (
     <>

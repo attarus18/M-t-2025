@@ -28,6 +28,20 @@
             android:value="ca-app-pub-4870944787959973~7444862789"
         />
 
+        <!-- Widget della schermata home (MeteoWidgetProvider). -->
+        <receiver
+            android:name=".MeteoWidgetProvider"
+            android:exported="false"
+            android:label="Meteo Zoo">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/meteo_widget_info" />
+        </receiver>
+
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

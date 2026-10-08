@@ -12,6 +12,7 @@ public class MainActivity extends BridgeActivity {
     public void onCreate(Bundle savedInstanceState) {
         // I plugin locali vanno registrati prima di super.onCreate.
         registerPlugin(LayoutInsetsPlugin.class);
+        registerPlugin(MeteoWidgetPlugin.class);
         super.onCreate(savedInstanceState);
         enterFullscreen();
     }

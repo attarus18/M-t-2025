@@ -4,4 +4,6 @@
     <string name="title_activity_main">Meteo Zoo</string>
     <string name="package_name">attarus18.meteozoo.com</string>
     <string name="custom_url_scheme">attarus18.meteozoo.com</string>
+    <string name="widget_description">Il meteo della tua zona raccontato dal tuo animale</string>
+    <string name="widget_animal_description">Il tuo animale vestito per il meteo di oggi</string>
 </resources>
