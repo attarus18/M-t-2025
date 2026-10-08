@@ -3,6 +3,8 @@
 import { Capacitor, registerPlugin } from '@capacitor/core';
 import { CONDITIONS, CONDITION_INFO, pickCondition } from './conditions';
 import { chosenAnimal } from './daily-notification';
+import type { SavedCity } from './location';
+import { KEYS, getStored } from './storage';
 import type { CurrentWeather } from './weather';
 
 /**
@@ -49,8 +51,20 @@ export function syncWidgetWeather(coords: { lat: number; lon: number }, current:
   }).catch(() => {});
 }
 
-/** Animale cambiato (o acquisti aggiornati): il widget ridisegna con il nuovo animale e le sue frasi. */
+/** Posizione per il widget: l'ultima GPS, altrimenti la prima citta' salvata. */
+function knownPosition() {
+  const last = getStored<{ lat: number; lon: number; name: string } | null>(KEYS.lastPosition, null);
+  if (last) return { lat: last.lat, lon: last.lon, city: last.name };
+  const first = getStored<SavedCity[]>(KEYS.favorites, [])[0];
+  return first ? { lat: first.lat, lon: first.lon, city: first.name } : {};
+}
+
+/**
+ * All'avvio, al ritorno nell'app e quando cambia l'animale: il widget riceve animale,
+ * frasi e l'ultima posizione nota. Se non ha ancora il meteo (o e' vecchio) lo scarica
+ * da solo, cosi' funziona anche quando il GPS dell'app non risponde.
+ */
 export function syncWidgetAnimal() {
   if (!Capacitor.isNativePlatform()) return;
-  MeteoWidget.save(animalData()).catch(() => {});
+  MeteoWidget.save({ ...knownPosition(), ...animalData() }).catch(() => {});
 }

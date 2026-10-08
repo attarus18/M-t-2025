@@ -64,6 +64,22 @@ function useWidgetAnimalSync() {
   useEffect(() => {
     syncWidgetAnimal();
   }, [animal.id]);
+  // Al ritorno nell'app il widget ricontrolla il meteo (lo riscarica se e' vecchio).
+  useEffect(() => {
+    if (!Capacitor.isNativePlatform()) return;
+    let handle: { remove: () => void } | undefined;
+    let cancelled = false;
+    (async () => {
+      const { App } = await import('@capacitor/app');
+      const registered = await App.addListener('resume', () => syncWidgetAnimal());
+      if (cancelled) registered.remove();
+      else handle = registered;
+    })();
+    return () => {
+      cancelled = true;
+      handle?.remove();
+    };
+  }, []);
 }
 
 export function AppShell({ children }: { children: ReactNode }) {

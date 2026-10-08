@@ -43,8 +43,7 @@ public class MeteoWidgetProvider extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager manager, int[] ids) {
         renderAll(context);
-        SharedPreferences p = prefs(context);
-        if (!p.contains("lat") || System.currentTimeMillis() - p.getLong("updatedAt", 0) < MIN_REFRESH_MS) return;
+        if (!needsRefresh(prefs(context))) return;
         final PendingResult pending = goAsync();
         Executors.newSingleThreadExecutor().execute(() -> {
             try {
@@ -60,6 +59,12 @@ public class MeteoWidgetProvider extends AppWidgetProvider {
 
     static SharedPreferences prefs(Context context) {
         return context.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
+    }
+
+    /** C'e' una posizione e il meteo manca o ha piu' di 20 minuti. */
+    static boolean needsRefresh(SharedPreferences p) {
+        if (!p.contains("lat")) return false;
+        return !p.contains("cond") || System.currentTimeMillis() - p.getLong("updatedAt", 0) >= MIN_REFRESH_MS;
     }
 
     /** Ridisegna tutti i widget presenti nella schermata home. */
@@ -156,7 +161,7 @@ public class MeteoWidgetProvider extends AppWidgetProvider {
     }
 
     /** Scarica il meteo attuale dal ponte e lo salva (stessa logica di pickCondition). */
-    private static void fetchWeather(Context context) throws Exception {
+    static void fetchWeather(Context context) throws Exception {
         SharedPreferences p = prefs(context);
         String url = String.format(Locale.ROOT, "%s?tipo=attuale&lat=%.2f&lon=%.2f", API, p.getFloat("lat", 0), p.getFloat("lon", 0));
         HttpURLConnection c = (HttpURLConnection) new URL(url).openConnection();
