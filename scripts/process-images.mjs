@@ -23,12 +23,40 @@ const TOLERANCE = 28; // distanza massima dal bianco puro per essere "sfondo"
  * meglio scontornare con "Rimuovi sfondo" di Canva e salvare i PNG trasparenti.
  */
 const STRICT = new Set(['leone']);
-const isStrictBg = (d, i) => Math.min(d[i], d[i + 1], d[i + 2]) >= 249 && Math.max(d[i], d[i + 1], d[i + 2]) - Math.min(d[i], d[i + 1], d[i + 2]) <= 3;
+// Singole scene dove la nebbia bianca tocca parti bianche dell'animale: con la
+// soglia normale sparirebbero insieme (la pancia del delfino).
+const STRICT_SCENES = new Set(['delfino/nebbia']);
+const isStrict = (animal, name) => STRICT.has(animal) || STRICT_SCENES.has(`${animal}/${name}`);
+// Scene con un buco di sfondo chiuso dal disegno (es. tra collo e zampa della
+// giraffa): il riempimento dai bordi non ci arriva, si tolgono le zone bianche grandi.
+const HOLE_SCENES = new Set(['giraffa/caldo']);
+const MIN_HOLE = 1500; // pixel: occhi e riflessi sono piu' piccoli
+const isStrictBg =(d, i) => Math.min(d[i], d[i + 1], d[i + 2]) >= 249 && Math.max(d[i], d[i + 1], d[i + 2]) - Math.min(d[i], d[i + 1], d[i + 2]) <= 3;
 
-function removeWhiteBackground(data, width, height, strict = false) {
+function removeWhiteBackground(data, width, height, strict = false, holes = false) {
   const isBg = strict
     ? i => isStrictBg(data, i) && data[i + 3] > 0
     : i => 255 * 3 - (data[i] + data[i + 1] + data[i + 2]) <= TOLERANCE * 3 && data[i + 3] > 0;
+  if (holes) {
+    const done = new Uint8Array(width * height);
+    for (let s = 0; s < width * height; s++) {
+      if (done[s] || !isStrictBg(data, s * 4)) continue;
+      const region = [];
+      const todo = [s];
+      done[s] = 1;
+      while (todo.length) {
+        const p = todo.pop();
+        region.push(p);
+        const x = p % width;
+        for (const q of [x > 0 ? p - 1 : -1, x < width - 1 ? p + 1 : -1, p - width, p + width]) {
+          if (q < 0 || q >= width * height || done[q] || !isStrictBg(data, q * 4)) continue;
+          done[q] = 1;
+          todo.push(q);
+        }
+      }
+      if (region.length >= MIN_HOLE) for (const p of region) data[p * 4 + 3] = 0;
+    }
+  }
   const seen = new Uint8Array(width * height);
   const stack = [];
   for (let x = 0; x < width; x++) stack.push(x, (height - 1) * width + x);
@@ -97,7 +125,7 @@ for (const animal of fs.existsSync(SRC) ? fs.readdirSync(SRC) : []) {
     // Gia' scontornata (es. con "Rimuovi sfondo" di Canva): si usa cosi' com'e'.
     const alreadyTransparent = (await src.metadata()).hasAlpha;
     const { data, info } = await src.ensureAlpha().raw().toBuffer({ resolveWithObject: true });
-    if (!alreadyTransparent) removeWhiteBackground(data, info.width, info.height, STRICT.has(animal));
+    if (!alreadyTransparent) removeWhiteBackground(data, info.width, info.height, isStrict(animal, name), HOLE_SCENES.has(`${animal}/${name}`));
     await sharp(data, { raw: { width: info.width, height: info.height, channels: 4 } })
       .trim({ threshold: 1 })
       .resize(SIZE, SIZE, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
