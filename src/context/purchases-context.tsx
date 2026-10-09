@@ -87,6 +87,14 @@ export function PurchasesProvider({ children }: { children: ReactNode }) {
     let cancelled = false;
     let resumeHandle: { remove: () => void } | undefined;
     (async () => {
+      // Conferma a Google Play gli acquisti fatti fuori dall'app (codici promozionali,
+      // pagamenti in sospeso completati dopo): senza conferma vengono annullati dopo 3 giorni.
+      try {
+        const { NativePurchases } = await plugin();
+        await NativePurchases.restorePurchases();
+      } catch {
+        // offline: si riprova al prossimo avvio
+      }
       await refresh();
       if (cancelled) return;
       setIsLoading(false);
