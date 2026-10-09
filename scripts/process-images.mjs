@@ -22,7 +22,7 @@ const TOLERANCE = 28; // distanza massima dal bianco puro per essere "sfondo"
  * e neutro: il pelo ha sempre una leggera tinta calda. Per il panda e' andato
  * meglio scontornare con "Rimuovi sfondo" di Canva e salvare i PNG trasparenti.
  */
-const STRICT = new Set([]);
+const STRICT = new Set(['leone']);
 const isStrictBg = (d, i) => Math.min(d[i], d[i + 1], d[i + 2]) >= 249 && Math.max(d[i], d[i + 1], d[i + 2]) - Math.min(d[i], d[i + 1], d[i + 2]) <= 3;
 
 function removeWhiteBackground(data, width, height, strict = false) {
