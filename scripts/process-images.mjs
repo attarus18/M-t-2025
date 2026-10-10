@@ -31,7 +31,10 @@ const STRICT_SCENES = new Set([
   'maiale/neve', 'tartaruga/neve', 'cane/neve', 'coniglio/neve', 'delfino/neve', 'granchio/neve',
   'pappagallo/nuvoloso', 'scimmia/nuvoloso', 'scoiattolo/nuvoloso',
 ]);
-const isStrict = (animal, name) => STRICT.has(animal) || STRICT_SCENES.has(`${animal}/${name}`);
+// I pupazzi di neve sono bianchi come lo sfondo: le scene di neve vanno scontornate delicate,
+// tranne le vecchie JPG con il contorno da adesivo (pupazzo gia' separato, ma piene di rumore).
+const SNOW_NORMAL = new Set(['gatto', 'mucca', 'pecora', 'pinguino', 'pollo', 'rana']);
+const isStrict = (animal, name) => STRICT.has(animal) || (name === 'neve' && !SNOW_NORMAL.has(animal)) || STRICT_SCENES.has(`${animal}/${name}`);
 // Scene con un buco di sfondo chiuso dal disegno (es. tra collo e zampa della
 // giraffa): il riempimento dai bordi non ci arriva, si tolgono le zone bianche grandi.
 const HOLE_SCENES = new Set(['giraffa/caldo']);
