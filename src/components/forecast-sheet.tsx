@@ -95,7 +95,7 @@ export function ForecastSheet({
         </header>
 
         <div className="flex flex-1 flex-col items-center justify-center py-4">
-          <div className="relative mb-1 max-w-[90%] rounded-3xl bg-white px-5 py-3 text-center font-fun text-[17px] font-bold leading-snug text-slate-800 shadow-xl">
+          <div className="relative z-10 mb-1 max-w-[90%] rounded-3xl bg-white px-5 py-3 text-center font-fun text-[17px] font-bold leading-snug text-slate-800 shadow-xl">
             {phrase}
             <span className="absolute -bottom-2 left-1/2 h-4 w-4 -translate-x-1/2 rotate-45 bg-white" />
           </div>

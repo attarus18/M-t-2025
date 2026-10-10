@@ -25,13 +25,62 @@ const TOLERANCE = 28; // distanza massima dal bianco puro per essere "sfondo"
 const STRICT = new Set(['leone']);
 // Singole scene dove la nebbia bianca tocca parti bianche dell'animale: con la
 // soglia normale sparirebbero insieme (la pancia del delfino).
-const STRICT_SCENES = new Set(['delfino/nebbia']);
+const STRICT_SCENES = new Set([
+  'delfino/nebbia',
+  // pupazzi di neve e nuvole bianche che toccano lo sfondo
+  'maiale/neve', 'tartaruga/neve', 'cane/neve', 'coniglio/neve', 'delfino/neve', 'granchio/neve',
+  'pappagallo/nuvoloso', 'scimmia/nuvoloso', 'scoiattolo/nuvoloso',
+]);
 const isStrict = (animal, name) => STRICT.has(animal) || STRICT_SCENES.has(`${animal}/${name}`);
 // Scene con un buco di sfondo chiuso dal disegno (es. tra collo e zampa della
 // giraffa): il riempimento dai bordi non ci arriva, si tolgono le zone bianche grandi.
 const HOLE_SCENES = new Set(['giraffa/caldo']);
 const MIN_HOLE = 1500; // pixel: occhi e riflessi sono piu' piccoli
 const isStrictBg =(d, i) => Math.min(d[i], d[i + 1], d[i + 2]) >= 249 && Math.max(d[i], d[i + 1], d[i + 2]) - Math.min(d[i], d[i + 1], d[i + 2]) <= 3;
+
+/**
+ * Con lo scontorno delicato restano puntini di rumore JPG staccati dal disegno:
+ * isole piccole, chiare e quasi neutre. I fiocchi di neve sono azzurri e restano.
+ */
+const MAX_SPECK = 400;
+function removeSpecks(data, width, height) {
+  const done = new Uint8Array(width * height);
+  for (let s = 0; s < width * height; s++) {
+    if (done[s] || data[s * 4 + 3] === 0) continue;
+    const region = [];
+    const todo = [s];
+    done[s] = 1;
+    let pale = 0;
+    while (todo.length && region.length <= MAX_SPECK) {
+      const p = todo.pop();
+      region.push(p);
+      const i = p * 4;
+      const lo = Math.min(data[i], data[i + 1], data[i + 2]);
+      const hi = Math.max(data[i], data[i + 1], data[i + 2]);
+      if (lo >= 200 && hi - lo <= 14) pale++;
+      const x = p % width;
+      for (const q of [x > 0 ? p - 1 : -1, x < width - 1 ? p + 1 : -1, p - width, p + width]) {
+        if (q < 0 || q >= width * height || done[q] || data[q * 4 + 3] === 0) continue;
+        done[q] = 1;
+        todo.push(q);
+      }
+    }
+    // Isola grande: e' disegno. Si segnano comunque i pixel rimasti in coda.
+    if (todo.length || region.length > MAX_SPECK) {
+      while (todo.length) {
+        const p = todo.pop();
+        const x = p % width;
+        for (const q of [x > 0 ? p - 1 : -1, x < width - 1 ? p + 1 : -1, p - width, p + width]) {
+          if (q < 0 || q >= width * height || done[q] || data[q * 4 + 3] === 0) continue;
+          done[q] = 1;
+          todo.push(q);
+        }
+      }
+      continue;
+    }
+    if (pale >= region.length * 0.8) for (const p of region) data[p * 4 + 3] = 0;
+  }
+}
 
 function removeWhiteBackground(data, width, height, strict = false, holes = false) {
   const isBg = strict
@@ -74,6 +123,7 @@ function removeWhiteBackground(data, width, height, strict = false, holes = fals
     if (y > 0) stack.push(p - width);
     if (y < height - 1) stack.push(p + width);
   }
+  if (strict) removeSpecks(data, width, height);
   if (strict) {
     // Seconda passata: l'alone di compressione JPG (grigio chiaro e neutro)
     // attaccato allo sfondo gia' tolto. Il pelo, leggermente caldo, resta.

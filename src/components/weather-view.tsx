@@ -105,7 +105,7 @@ export function WeatherView({
 
       {/* Protagonista: animale + fumetto */}
       <div className="relative mt-2 flex w-full flex-col items-center">
-        <div className="relative mb-1 max-w-[85%] rounded-3xl bg-white px-5 py-3 text-center font-fun text-[17px] font-bold leading-snug text-slate-800 shadow-xl">
+        <div className="relative z-10 mb-1 max-w-[85%] rounded-3xl bg-white px-5 py-3 text-center font-fun text-[17px] font-bold leading-snug text-slate-800 shadow-xl">
           {phrase}
           <span className="absolute -bottom-2 left-1/2 h-4 w-4 -translate-x-1/2 rotate-45 bg-white" />
         </div>
