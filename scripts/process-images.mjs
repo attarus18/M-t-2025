@@ -39,6 +39,61 @@ const isStrict = (animal, name) => STRICT.has(animal) || (name === 'neve' && !SN
 // giraffa): il riempimento dai bordi non ci arriva, si tolgono le zone bianche grandi.
 const HOLE_SCENES = new Set(['giraffa/caldo']);
 const MIN_HOLE = 1500; // pixel: occhi e riflessi sono piu' piccoli
+// Ombra grigia chiara sotto l'animale (tra le zampe del granchio): con la soglia normale
+// resta una macchia biancastra. Qui e' sfondo anche il grigio chiaro neutro.
+const SHADOW_SCENES = new Set(['granchio/sole', 'granchio/notte']);
+const isShadow = (d, i) => Math.min(d[i], d[i + 1], d[i + 2]) >= 200 && Math.max(d[i], d[i + 1], d[i + 2]) - Math.min(d[i], d[i + 1], d[i + 2]) <= 24;
+// Nebbia che arriva ai bordi dell'immagine: verrebbe tagliata dritta, la si sfuma.
+const FADE_SCENES = new Set(['leone/nebbia']);
+/**
+ * Nebbia grigia su fondo bianco: il bianco e il grigio chiaro neutri diventano
+ * trasparenti in proporzione alla chiarezza, cosi' restano solo i fili di nebbia.
+ */
+function fogToAlpha(data, width, height) {
+  for (let p = 0; p < width * height; p++) {
+    const i = p * 4;
+    const lo = Math.min(data[i], data[i + 1], data[i + 2]);
+    const hi = Math.max(data[i], data[i + 1], data[i + 2]);
+    if (hi - lo > 12 || lo < 170) continue;
+    data[i + 3] = Math.min(data[i + 3], Math.round(Math.min(255, (255 - lo) * 3.5)));
+  }
+}
+
+/** Ombre chiuse dalle zampe nella meta' bassa dell'immagine (vedi SHADOW_SCENES). */
+function removeLowShadows(data, width, height) {
+  const done = new Uint8Array(width * height);
+  for (let s = 0; s < width * height; s++) {
+    if (done[s] || data[s * 4 + 3] === 0 || !isShadow(data, s * 4)) continue;
+    const region = [];
+    const todo = [s];
+    done[s] = 1;
+    let ySum = 0;
+    while (todo.length) {
+      const p = todo.pop();
+      region.push(p);
+      ySum += (p / width) | 0;
+      const x = p % width;
+      for (const q of [x > 0 ? p - 1 : -1, x < width - 1 ? p + 1 : -1, p - width, p + width]) {
+        if (q < 0 || q >= width * height || done[q] || data[q * 4 + 3] === 0 || !isShadow(data, q * 4)) continue;
+        done[q] = 1;
+        todo.push(q);
+      }
+    }
+    if (region.length >= 300 && ySum / region.length > height * 0.6) for (const p of region) data[p * 4 + 3] = 0;
+  }
+}
+
+function fadeBorders(data, width, height) {
+  const band = Math.round(Math.min(width, height) * 0.12);
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const d = Math.min(x, y, width - 1 - x, height - 1 - y);
+      if (d >= band) continue;
+      const i = (y * width + x) * 4 + 3;
+      data[i] = Math.round(data[i] * (d / band) ** 1.5);
+    }
+  }
+}
 const isStrictBg =(d, i) => Math.min(d[i], d[i + 1], d[i + 2]) >= 249 && Math.max(d[i], d[i + 1], d[i + 2]) - Math.min(d[i], d[i + 1], d[i + 2]) <= 3;
 
 /**
@@ -85,10 +140,57 @@ function removeSpecks(data, width, height) {
   }
 }
 
-function removeWhiteBackground(data, width, height, strict = false, holes = false) {
+/**
+ * Le vecchie illustrazioni a 200px hanno, attorno al contorno da adesivo, un anello di
+ * rumore JPG chiaro e grigiastro che la soglia lascia a puntini: si toglie, a partire
+ * dallo sfondo, per al massimo `depth` pixel (il contorno scuro del disegno lo ferma).
+ */
+function cleanEdge(data, width, height, depth) {
+  const isRing = i => {
+    const lo = Math.min(data[i], data[i + 1], data[i + 2]);
+    const hi = Math.max(data[i], data[i + 1], data[i + 2]);
+    return lo >= 175 && hi - lo <= 30;
+  };
+  // Fiocchi di neve, gocce e foglie sono isole piccole staccate dal disegno: restano.
+  const big = new Uint8Array(width * height);
+  const seen = new Uint8Array(width * height);
+  for (let s = 0; s < width * height; s++) {
+    if (seen[s] || data[s * 4 + 3] === 0) continue;
+    const region = [s];
+    seen[s] = 1;
+    for (let k = 0; k < region.length; k++) {
+      const p = region[k];
+      const x = p % width;
+      for (const q of [x > 0 ? p - 1 : -1, x < width - 1 ? p + 1 : -1, p - width, p + width]) {
+        if (q < 0 || q >= width * height || seen[q] || data[q * 4 + 3] === 0) continue;
+        seen[q] = 1;
+        region.push(q);
+      }
+    }
+    if (region.length > 6000) for (const p of region) big[p] = 1;
+  }
+  let front = [];
+  for (let p = 0; p < width * height; p++) if (data[p * 4 + 3] === 0) front.push(p);
+  for (let d = 0; d < depth && front.length; d++) {
+    const next = [];
+    for (const p of front) {
+      const x = p % width;
+      for (const q of [x > 0 ? p - 1 : -1, x < width - 1 ? p + 1 : -1, p - width, p + width]) {
+        if (q < 0 || q >= width * height || data[q * 4 + 3] === 0 || !big[q] || !isRing(q * 4)) continue;
+        data[q * 4 + 3] = 0;
+        next.push(q);
+      }
+    }
+    front = next;
+  }
+}
+
+function removeWhiteBackground(data, width, height, strict = false, holes = false, edgeDepth = 0, shadow = false) {
   const isBg = strict
     ? i => isStrictBg(data, i) && data[i + 3] > 0
-    : i => 255 * 3 - (data[i] + data[i + 1] + data[i + 2]) <= TOLERANCE * 3 && data[i + 3] > 0;
+    : shadow
+      ? i => isShadow(data, i) && data[i + 3] > 0
+      : i => 255 * 3 - (data[i] + data[i + 1] + data[i + 2]) <= TOLERANCE * 3 && data[i + 3] > 0;
   if (holes) {
     const done = new Uint8Array(width * height);
     for (let s = 0; s < width * height; s++) {
@@ -149,6 +251,8 @@ function removeWhiteBackground(data, width, height, strict = false, holes = fals
     }
   }
 
+  if (edgeDepth) cleanEdge(data, width, height, edgeDepth);
+
   // Bordo morbido: i pixel quasi bianchi accanto allo sfondo diventano semitrasparenti.
   for (let p = 0; p < width * height; p++) {
     if (data[p * 4 + 3] === 0) continue;
@@ -174,11 +278,30 @@ for (const animal of fs.existsSync(SRC) ? fs.readdirSync(SRC) : []) {
   for (const file of fs.readdirSync(dir)) {
     if (!/\.(png|jpe?g|webp)$/i.test(file)) continue;
     const name = path.parse(file).name;
-    const src = sharp(path.join(dir, file));
+    const meta = await sharp(path.join(dir, file)).metadata();
     // Gia' scontornata (es. con "Rimuovi sfondo" di Canva): si usa cosi' com'e'.
-    const alreadyTransparent = (await src.metadata()).hasAlpha;
+    const alreadyTransparent = meta.hasAlpha;
+    // Le vecchie a 200px si ingrandiscono prima di scontornare: il bordo viene liscio
+    // invece che a scalini.
+    const small = meta.width < 400;
+    const src = sharp(path.join(dir, file));
+    if (small) src.resize(SIZE * 2, SIZE * 2, { kernel: 'lanczos3' });
     const { data, info } = await src.ensureAlpha().raw().toBuffer({ resolveWithObject: true });
-    if (!alreadyTransparent) removeWhiteBackground(data, info.width, info.height, isStrict(animal, name), HOLE_SCENES.has(`${animal}/${name}`));
+    if (!alreadyTransparent) {
+      const scene = `${animal}/${name}`;
+      removeWhiteBackground(data, info.width, info.height, isStrict(animal, name), HOLE_SCENES.has(scene), small ? 10 : 0, SHADOW_SCENES.has(scene));
+      if (SHADOW_SCENES.has(scene)) removeLowShadows(data, info.width, info.height);
+      if (FADE_SCENES.has(scene)) {
+        fogToAlpha(data, info.width, info.height);
+        fadeBorders(data, info.width, info.height);
+      }
+    }
+    if (small) {
+      // Alfa leggermente sfumato: niente seghettature dopo l'ingrandimento.
+      const alpha = await sharp(data, { raw: { width: info.width, height: info.height, channels: 4 } })
+        .extractChannel(3).blur(1.2).raw().toBuffer();
+      for (let p = 0; p < info.width * info.height; p++) data[p * 4 + 3] = Math.min(data[p * 4 + 3], alpha[p]);
+    }
     await sharp(data, { raw: { width: info.width, height: info.height, channels: 4 } })
       .trim({ threshold: 1 })
       .resize(SIZE, SIZE, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
