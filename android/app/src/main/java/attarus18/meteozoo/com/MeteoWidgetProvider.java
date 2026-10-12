@@ -67,18 +67,26 @@ public class MeteoWidgetProvider extends AppWidgetProvider {
         return !p.contains("cond") || System.currentTimeMillis() - p.getLong("updatedAt", 0) >= MIN_REFRESH_MS;
     }
 
-    /** Ridisegna tutti i widget presenti nella schermata home. */
+    /** Ridisegna tutti i widget presenti nella schermata home, nei tre formati. */
     static void renderAll(Context context) {
         AppWidgetManager manager = AppWidgetManager.getInstance(context);
-        int[] ids = manager.getAppWidgetIds(new ComponentName(context, MeteoWidgetProvider.class));
+        render(context, manager, MeteoWidgetProvider.class, R.layout.meteo_widget);
+        render(context, manager, MeteoWidgetSmallProvider.class, R.layout.meteo_widget_small);
+        render(context, manager, MeteoWidgetSquareProvider.class, R.layout.meteo_widget_square);
+    }
+
+    private static void render(Context context, AppWidgetManager manager, Class<?> provider, int layout) {
+        int[] ids = manager.getAppWidgetIds(new ComponentName(context, provider));
         if (ids.length == 0) return;
-        RemoteViews views = build(context);
+        RemoteViews views = build(context, layout);
         for (int id : ids) manager.updateAppWidget(id, views);
     }
 
-    private static RemoteViews build(Context context) {
+    private static RemoteViews build(Context context, int layout) {
         SharedPreferences p = prefs(context);
-        RemoteViews v = new RemoteViews(context.getPackageName(), R.layout.meteo_widget);
+        RemoteViews v = new RemoteViews(context.getPackageName(), layout);
+        boolean big = layout == R.layout.meteo_widget;
+        boolean square = layout == R.layout.meteo_widget_square;
 
         Intent open = new Intent(context, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         v.setOnClickPendingIntent(R.id.widget_root, PendingIntent.getActivity(context, 0, open, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT));
@@ -89,10 +97,13 @@ public class MeteoWidgetProvider extends AppWidgetProvider {
             // Ancora nessun meteo: invito ad aprire l'app.
             v.setInt(R.id.widget_root, "setBackgroundResource", background("sole"));
             setAnimal(context, v, animal, "sole");
-            v.setTextViewText(R.id.widget_city, "Meteo Zoo");
+            v.setTextViewText(R.id.widget_city, big || square ? "Meteo Zoo" : "Apri l'app");
             v.setTextViewText(R.id.widget_temp, "");
-            v.setTextViewText(R.id.widget_label, "");
-            v.setTextViewText(R.id.widget_phrase, "Apri l'app per vedere il meteo della tua zona.");
+            if (big) {
+                v.setTextViewText(R.id.widget_label, "");
+                v.setTextViewText(R.id.widget_phrase, "Apri l'app per vedere il meteo della tua zona.");
+            }
+            if (square) v.setTextViewText(R.id.widget_range, "");
             return v;
         }
 
@@ -100,9 +111,13 @@ public class MeteoWidgetProvider extends AppWidgetProvider {
         setAnimal(context, v, animal, cond);
         v.setTextViewText(R.id.widget_city, p.getString("city", ""));
         v.setTextViewText(R.id.widget_temp, Math.round(p.getFloat("temp", 0)) + "°");
-        String range = "max " + Math.round(p.getFloat("max", 0)) + "° · min " + Math.round(p.getFloat("min", 0)) + "°";
-        v.setTextViewText(R.id.widget_label, label(p, cond) + "  ·  " + range);
-        v.setTextViewText(R.id.widget_phrase, phrase(p, animal, cond));
+        long max = Math.round(p.getFloat("max", 0));
+        long min = Math.round(p.getFloat("min", 0));
+        if (big) {
+            v.setTextViewText(R.id.widget_label, label(p, cond) + "  ·  max " + max + "° · min " + min + "°");
+            v.setTextViewText(R.id.widget_phrase, phrase(p, animal, cond));
+        }
+        if (square) v.setTextViewText(R.id.widget_range, "↑" + max + "°\n↓" + min + "°");
         return v;
     }
 
