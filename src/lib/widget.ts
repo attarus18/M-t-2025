@@ -5,7 +5,8 @@ import { CONDITIONS, CONDITION_INFO, pickCondition } from './conditions';
 import { chosenAnimal } from './daily-notification';
 import type { SavedCity } from './location';
 import { KEYS, getStored } from './storage';
-import type { CurrentWeather } from './weather';
+import { pickPhrase } from './animals';
+import { dailySummary, type CurrentWeather, type Forecast } from './weather';
 
 /**
  * Widget della schermata home (android/.../MeteoWidgetProvider.java).
@@ -21,6 +22,8 @@ interface MeteoWidgetPlugin {
     animal?: string;
     phrases?: string;
     labels?: string;
+    /** Frase mostrata nella home per questa scena, oggi. */
+    phrase?: string;
     weather?: { temp: number; min: number; max: number; cond: string };
   }): Promise<void>;
 }
@@ -34,8 +37,12 @@ function animalData() {
   return { animal: animal.id, phrases: JSON.stringify(animal.phrases), labels: LABELS };
 }
 
-/** Meteo della posizione appena scaricato: il widget si aggiorna subito. */
-export function syncWidgetWeather(coords: { lat: number; lon: number }, current: CurrentWeather) {
+/**
+ * Meteo della posizione appena scaricato: il widget si aggiorna subito e mostra gli
+ * stessi numeri e la stessa frase della home (minima e massima della giornata dalle
+ * previsioni, non quelle del meteo attuale).
+ */
+export function syncWidgetWeather(coords: { lat: number; lon: number }, current: CurrentWeather, forecast: Forecast | null) {
   if (!Capacitor.isNativePlatform()) return;
   const cond = pickCondition({
     weather: current.weather[0],
@@ -43,11 +50,19 @@ export function syncWidgetWeather(coords: { lat: number; lon: number }, current:
     windMs: current.wind.speed,
     gustMs: current.wind.gust,
   });
+  const today = forecast ? dailySummary(forecast)[0] : undefined;
+  const temp = current.main.temp;
   MeteoWidget.save({
     ...coords,
     city: current.name,
     ...animalData(),
-    weather: { temp: current.main.temp, min: current.main.temp_min, max: current.main.temp_max, cond },
+    phrase: pickPhrase(chosenAnimal(), cond, `${current.id}`),
+    weather: {
+      temp,
+      min: Math.min(today?.min ?? current.main.temp_min, temp),
+      max: Math.max(today?.max ?? current.main.temp_max, temp),
+      cond,
+    },
   }).catch(() => {});
 }
 

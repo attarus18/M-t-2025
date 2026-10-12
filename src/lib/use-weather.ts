@@ -41,7 +41,7 @@ async function load(target: 'gps' | SavedCity): Promise<WeatherBundle> {
   // Widget: la posizione GPS, oppure la prima citta' salvata se il GPS non e' mai stato usato.
   const firstCity = getStored<SavedCity[]>(KEYS.favorites, [])[0];
   const noGps = !getStored<unknown>(KEYS.lastPosition, null);
-  if (target === 'gps' || (noGps && firstCity && target.id === firstCity.id)) syncWidgetWeather(coords, current);
+  if (target === 'gps' || (noGps && firstCity && target.id === firstCity.id)) syncWidgetWeather(coords, current, forecast);
   return { current, forecast, air, coords, loadedAt: Date.now() };
 }
 

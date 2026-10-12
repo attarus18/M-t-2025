@@ -132,12 +132,24 @@ public class MeteoWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    /** Una frase dell'animale per quella scena, la stessa per tutto il giorno. */
+    static String today() {
+        return new SimpleDateFormat("yyyyMMdd", Locale.ROOT).format(new Date());
+    }
+
+    /**
+     * La frase che l'app mostra nella home, se e' di oggi, dello stesso animale e della stessa scena;
+     * altrimenti una frase dell'animale per quella scena, la stessa per tutto il giorno.
+     */
     private static String phrase(SharedPreferences p, String animal, String cond) {
+        String day = today();
+        String fromApp = p.getString("phrase", "");
+        if (!fromApp.isEmpty() && cond.equals(p.getString("phraseCond", "")) && day.equals(p.getString("phraseDay", ""))
+                && animal.equals(p.getString("phraseAnimal", ""))) {
+            return "«" + fromApp + "»";
+        }
         try {
             JSONArray list = new JSONObject(p.getString("phrases", "{}")).optJSONArray(cond);
             if (list == null || list.length() == 0) return "";
-            String day = new SimpleDateFormat("yyyyMMdd", Locale.ROOT).format(new Date());
             int i = Math.abs((animal + cond + day).hashCode()) % list.length();
             return "«" + list.getString(i) + "»";
         } catch (Exception e) {
@@ -186,10 +198,23 @@ public class MeteoWidgetProvider extends AppWidgetProvider {
                 wind != null ? wind.optDouble("speed", 0) : 0,
                 wind != null ? wind.optDouble("gust", 0) : 0
             );
+            // Minima e massima della giornata le conosce l'app (dalle previsioni): oggi si
+            // tengono e si allargano solo se la temperatura attuale le supera. Il meteo
+            // attuale di OpenWeatherMap non ha la minima/massima del giorno.
+            String day = today();
+            float min, max;
+            if (day.equals(p.getString("minMaxDay", ""))) {
+                min = Math.min(p.getFloat("min", (float) temp), (float) temp);
+                max = Math.max(p.getFloat("max", (float) temp), (float) temp);
+            } else {
+                min = (float) Math.min(main.optDouble("temp_min", temp), temp);
+                max = (float) Math.max(main.optDouble("temp_max", temp), temp);
+            }
             SharedPreferences.Editor e = p.edit()
                 .putFloat("temp", (float) temp)
-                .putFloat("min", (float) main.optDouble("temp_min", temp))
-                .putFloat("max", (float) main.optDouble("temp_max", temp))
+                .putFloat("min", min)
+                .putFloat("max", max)
+                .putString("minMaxDay", day)
                 .putString("cond", cond)
                 .putLong("updatedAt", System.currentTimeMillis());
             String name = j.optString("name", "");

@@ -131,6 +131,71 @@ export const AIR_QUALITY_LABELS: Record<AirQualityIndex, { label: string; color:
 /** Da m/s (OpenWeatherMap in unita' metriche) a km/h. */
 export const kmh = (ms: number) => Math.round(ms * 3.6);
 
+const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+
+/**
+ * Previsioni ora per ora per le prossime `hours` ore. Il piano gratuito di
+ * OpenWeatherMap da' una previsione ogni 3 ore: le ore in mezzo si ricavano
+ * interpolando temperatura, vento e umidita' tra le due fasce vicine (partendo dal
+ * meteo attuale), con il cielo della fascia piu' vicina e giorno/notte da alba e
+ * tramonto.
+ */
+export function hourlyForecast(current: CurrentWeather, forecast: Forecast, hours = 24): ForecastItem[] {
+  // Il meteo attuale fa da primo punto, cosi' le prime ore partono dal valore reale.
+  const now: ForecastItem = {
+    dt: current.dt,
+    main: current.main,
+    weather: current.weather,
+    wind: current.wind,
+    visibility: current.visibility,
+    pop: forecast.list[0]?.pop ?? 0,
+    dt_txt: '',
+  };
+  const points = [now, ...forecast.list.filter(i => i.dt > current.dt)];
+  const { sunrise, sunset } = current.sys;
+  const DAY = 86400;
+  const isDay = (dt: number) => {
+    // Alba e tramonto di oggi, spostati di giorni interi per le ore di domani.
+    const shift = Math.floor((dt - sunrise) / DAY) * DAY;
+    return dt >= sunrise + shift && dt < sunset + shift;
+  };
+
+  const result: ForecastItem[] = [];
+  // Si parte dall'ora in corso (etichetta "Ora"), che prende il meteo attuale.
+  const start = Math.floor(Date.now() / 3_600_000) * 3600;
+  for (let h = 0; h < hours; h++) {
+    const dt = start + h * 3600;
+    const j = points.findIndex(p => p.dt > dt);
+    if (j === -1) break; // oltre l'ultima previsione disponibile
+    const a = points[Math.max(0, j - 1)];
+    const b = points[j];
+    const t = b.dt === a.dt ? 0 : Math.min(1, Math.max(0, (dt - a.dt) / (b.dt - a.dt)));
+    const near = t < 0.5 ? a : b;
+    const sky = near.weather[0];
+    result.push({
+      dt,
+      main: {
+        temp: lerp(a.main.temp, b.main.temp, t),
+        feels_like: lerp(a.main.feels_like, b.main.feels_like, t),
+        temp_min: lerp(a.main.temp_min, b.main.temp_min, t),
+        temp_max: lerp(a.main.temp_max, b.main.temp_max, t),
+        pressure: Math.round(lerp(a.main.pressure, b.main.pressure, t)),
+        humidity: Math.round(lerp(a.main.humidity, b.main.humidity, t)),
+      },
+      weather: [{ ...sky, icon: sky.icon.slice(0, 2) + (isDay(dt) ? 'd' : 'n') }],
+      wind: {
+        speed: lerp(a.wind.speed, b.wind.speed, t),
+        deg: near.wind.deg,
+        gust: a.wind.gust !== undefined && b.wind.gust !== undefined ? lerp(a.wind.gust, b.wind.gust, t) : near.wind.gust,
+      },
+      visibility: near.visibility,
+      pop: b.pop,
+      dt_txt: '',
+    });
+  }
+  return result;
+}
+
 /** Previsioni raggruppate per giorno locale della citta', con minima e massima reali. */
 export function dailySummary(forecast: Forecast) {
   const offset = forecast.city.timezone;

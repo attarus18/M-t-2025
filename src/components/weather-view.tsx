@@ -11,7 +11,7 @@ import { WeatherSource } from '@/components/weather-source';
 import { pickPhrase, type Animal } from '@/lib/animals';
 import { CONDITION_INFO, pickCondition, type ConditionId } from '@/lib/conditions';
 import type { WeatherBundle, WeatherLoadError } from '@/lib/use-weather';
-import { AIR_QUALITY_LABELS, dailySummary, kmh, type ForecastItem } from '@/lib/weather';
+import { AIR_QUALITY_LABELS, dailySummary, hourlyForecast, kmh, type ForecastItem } from '@/lib/weather';
 import { cn } from '@/lib/utils';
 
 const DAYS = ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'];
@@ -171,14 +171,14 @@ export function WeatherView({
           <section className="glass mt-4 w-full rounded-3xl p-5">
             <h3 className="mb-4 text-[11px] font-bold uppercase tracking-widest opacity-70">Prossime ore</h3>
             <div className="no-scrollbar flex snap-x gap-3 overflow-x-auto pb-1">
-              {forecast.list.slice(0, 12).map((item, idx) => {
+              {hourlyForecast(current, forecast).map((item, idx) => {
                 const c = conditionOf(item);
                 const t = cityTime(item.dt, tz);
                 return (
                   <button
                     key={item.dt}
                     onClick={() =>
-                      setSheet({ item, condition: c, title: idx === 0 ? 'Tra poco' : `Ore ${String(t.getUTCHours()).padStart(2, '0')}:00`, tz })
+                      setSheet({ item, condition: c, title: idx === 0 ? 'Adesso' : `Ore ${String(t.getUTCHours()).padStart(2, '0')}:00`, tz })
                     }
                     className="flex min-w-[4rem] snap-start flex-col items-center gap-1 rounded-2xl py-2 transition active:scale-95 active:bg-white/10"
                   >

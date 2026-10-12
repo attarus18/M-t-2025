@@ -34,11 +34,19 @@ public class MeteoWidgetPlugin extends Plugin {
             putString(e, data, "labels");
             JSObject weather = call.getObject("weather");
             if (weather != null) {
+                String cond = weather.optString("cond", "sole");
+                String today = MeteoWidgetProvider.today();
                 e.putFloat("temp", (float) weather.optDouble("temp", 0))
                     .putFloat("min", (float) weather.optDouble("min", 0))
                     .putFloat("max", (float) weather.optDouble("max", 0))
-                    .putString("cond", weather.optString("cond", "sole"))
+                    .putString("minMaxDay", today)
+                    .putString("cond", cond)
                     .putLong("updatedAt", System.currentTimeMillis());
+                // La frase della home: il widget la usa finche' animale, scena e giorno non cambiano.
+                if (data.has("phrase")) {
+                    e.putString("phrase", data.optString("phrase")).putString("phraseCond", cond).putString("phraseDay", today)
+                        .putString("phraseAnimal", data.optString("animal"));
+                }
             }
             e.commit();
             MeteoWidgetProvider.renderAll(context);
