@@ -124,7 +124,7 @@ export function WeatherView({
       </div>
       <p className="text-lg font-bold capitalize opacity-95">{current.weather[0].description}</p>
       <WeatherSource className="mt-0.5" />
-      <div className="mt-3 flex gap-5 rounded-full bg-black/20 px-5 py-2 text-sm font-semibold backdrop-blur-md">
+      <div className="mt-3 flex gap-4 whitespace-nowrap rounded-full bg-black/20 px-5 py-2 text-sm font-semibold backdrop-blur-md">
         <span>
           <span className="opacity-60">{t.weather.max}</span> {deg(today?.max ?? current.main.temp_max)}
         </span>
