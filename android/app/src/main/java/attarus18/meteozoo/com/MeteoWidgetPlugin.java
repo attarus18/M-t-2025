@@ -32,6 +32,10 @@ public class MeteoWidgetPlugin extends Plugin {
             putString(e, data, "animal");
             putString(e, data, "phrases");
             putString(e, data, "labels");
+            putString(e, data, "openApp");
+            putString(e, data, "openAppShort");
+            putString(e, data, "owmLang");
+            if (data.has("imperial")) e.putBoolean("imperial", data.optBoolean("imperial", false));
             JSObject weather = call.getObject("weather");
             if (weather != null) {
                 String cond = weather.optString("cond", "sole");

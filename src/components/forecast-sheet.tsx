@@ -6,9 +6,10 @@ import { AnimalArt } from '@/components/animal-art';
 import { WeatherEffects } from '@/components/weather-effects';
 import { ShareButton } from '@/components/share-button';
 import { WeatherSource } from '@/components/weather-source';
+import { useI18n } from '@/i18n';
 import { pickPhrase, type Animal } from '@/lib/animals';
 import { CONDITION_INFO, type ConditionId } from '@/lib/conditions';
-import { kmh, type ForecastItem } from '@/lib/weather';
+import type { ForecastItem } from '@/lib/weather';
 import { cn } from '@/lib/utils';
 
 export interface SheetItem {
@@ -36,6 +37,7 @@ export function ForecastSheet({
   cityName: string;
   onClose: () => void;
 }) {
+  const { t, temp: toTemp, deg, speed, speedUnit } = useI18n();
   useEffect(() => {
     if (!sheet) return;
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
@@ -73,7 +75,7 @@ export function ForecastSheet({
         style={{ paddingTop: 'calc(1.25rem + var(--safe-top, 0px))' }}
       >
         <header className="flex items-center gap-2">
-          <button onClick={onClose} className="-ml-2 rounded-full p-2 active:bg-white/15" aria-label="Indietro">
+          <button onClick={onClose} className="-ml-2 rounded-full p-2 active:bg-white/15" aria-label={t.common.back}>
             <ChevronLeft className="h-6 w-6" />
           </button>
           <div className="flex-1">
@@ -102,30 +104,30 @@ export function ForecastSheet({
           <AnimalArt animal={animal} condition={condition} size={260} animated />
 
           <div className="-mt-1 flex items-start font-fun font-bold leading-none drop-shadow-lg">
-            <span className="text-[5.5rem]">{Math.round(temp)}</span>
+            <span className="text-[5.5rem]">{toTemp(temp)}</span>
             <span className="mt-3 text-4xl">°</span>
           </div>
           {sheet.min !== undefined && (
             <p className="mt-1 rounded-full bg-black/20 px-4 py-1.5 text-sm font-semibold backdrop-blur-md">
-              <span className="opacity-70">Max</span> {Math.round(temp)}° · <span className="opacity-70">Min</span>{' '}
-              {Math.round(sheet.min)}°
+              <span className="opacity-70">{t.weather.max}</span> {deg(temp)} · <span className="opacity-70">{t.weather.min}</span>{' '}
+              {deg(sheet.min)}
             </p>
           )}
           <WeatherSource className="mt-2" />
         </div>
 
         <div className="grid grid-cols-2 gap-3">
-          <Stat icon={Umbrella} label="Pioggia" value={`${Math.round(pop * 100)}`} unit="%" />
-          <Stat icon={Wind} label="Vento" value={`${kmh(item.wind.speed)}`} unit="km/h" />
-          <Stat icon={Droplets} label="Umidità" value={`${item.main.humidity}`} unit="%" />
-          <Stat icon={Thermometer} label="Percepita" value={`${Math.round(item.main.feels_like)}`} unit="°" />
+          <Stat icon={Umbrella} label={t.weather.rain} value={`${Math.round(pop * 100)}`} unit="%" />
+          <Stat icon={Wind} label={t.weather.wind} value={`${speed(item.wind.speed)}`} unit={speedUnit} />
+          <Stat icon={Droplets} label={t.weather.humidity} value={`${item.main.humidity}`} unit="%" />
+          <Stat icon={Thermometer} label={t.weather.feelsLike} value={`${toTemp(item.main.feels_like)}`} unit="°" />
         </div>
 
         <button
           onClick={onClose}
           className="mt-4 w-full rounded-full bg-white py-3.5 font-fun text-lg font-bold text-sky-700 shadow-lg active:scale-95"
         >
-          Chiudi
+          {t.common.close}
         </button>
       </div>
     </div>

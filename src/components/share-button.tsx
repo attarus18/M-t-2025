@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Loader2, Share2 } from 'lucide-react';
 import { isShareCancel, shareForecast, type ShareForecast } from '@/lib/share';
+import { useI18n } from '@/i18n';
 import { cn } from '@/lib/utils';
 
 /** Condivide il meteo come immagine (animale, citta', temperatura e frase). */
@@ -16,6 +17,7 @@ export function ShareButton({
   className?: string;
 }) {
   const [busy, setBusy] = useState(false);
+  const { t } = useI18n();
 
   const onShare = async () => {
     if (busy) return;
@@ -32,7 +34,7 @@ export function ShareButton({
   const Icon = busy ? Loader2 : Share2;
   if (variant === 'icon') {
     return (
-      <button onClick={onShare} className={cn('rounded-full p-2 active:bg-white/15', className)} aria-label="Condividi">
+      <button onClick={onShare} className={cn('rounded-full p-2 active:bg-white/15', className)} aria-label={t.common.share}>
         <Icon className={cn('h-5 w-5', busy && 'animate-spin')} />
       </button>
     );
@@ -45,7 +47,7 @@ export function ShareButton({
         className,
       )}
     >
-      <Icon className={cn('h-4 w-4', busy && 'animate-spin')} /> Condividi
+      <Icon className={cn('h-4 w-4', busy && 'animate-spin')} /> {t.common.share}
     </button>
   );
 }

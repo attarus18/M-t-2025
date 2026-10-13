@@ -2,6 +2,7 @@
 
 import { Capacitor } from '@capacitor/core';
 import { KEYS, useStored } from './storage';
+import { msg } from '@/i18n/current';
 
 export interface SavedCity {
   /** "lat,lon" arrotondati: identifica la citta' senza dipendere dagli ID OpenWeatherMap. */
@@ -23,11 +24,18 @@ export class LocationError extends Error {
   }
 }
 
+/** Messaggi nella lingua in uso al momento dell'errore. */
 const MESSAGES = {
-  denied: 'Permesso di localizzazione negato. Abilitalo dalle impostazioni o cerca una città.',
-  unavailable: 'Posizione non disponibile: attiva il GPS o cerca una città a mano.',
-  timeout: 'Il GPS non risponde. Spostati all\'aperto o riprova.',
-} as const;
+  get denied() {
+    return msg().errors.gpsDenied;
+  },
+  get unavailable() {
+    return msg().errors.gpsUnavailable;
+  },
+  get timeout() {
+    return msg().errors.gpsTimeout;
+  },
+};
 
 /** Posizione attuale: plugin nativo su Android (gestisce i permessi), API del browser sul web. */
 export async function getCurrentPosition(): Promise<{ lat: number; lon: number }> {

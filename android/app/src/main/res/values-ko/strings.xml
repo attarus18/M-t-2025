@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!-- Testi del widget (ko). Vedi values/strings.xml. -->
+<resources>
+    <string name="widget_description">내 동물이 알려주는 우리 동네 날씨</string>
+    <string name="widget_small_description">작은 공간에 동물과 기온을</string>
+    <string name="widget_square_description">동물과 기온, 최고·최저 기온</string>
+    <string name="widget_animal_description">오늘 날씨에 맞게 옷을 입은 동물</string>
+    <string name="widget_open_app">앱을 열어 우리 동네 날씨를 확인하세요.</string>
+    <string name="widget_open_app_short">앱 열기</string>
+    <string name="widget_label_small">Meteo Zoo 미니</string>
+    <string name="widget_label_square">Meteo Zoo 정사각형</string>
+</resources>

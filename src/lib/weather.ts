@@ -3,6 +3,9 @@
 // previsioni 5 giorni / 3 ore, qualita' dell'aria, geocoding.
 // Anche l'APK chiama il sito pubblicato; NEXT_PUBLIC_WEATHER_API serve solo per provare
 // un ponte diverso (es. http://localhost:9005/api/meteo/ con next dev).
+import { currentLocale, msg } from '@/i18n/current';
+import { LOCALE_INFO } from '@/i18n/locales';
+
 const API = process.env.NEXT_PUBLIC_WEATHER_API || 'https://meteo-zoo.vercel.app/api/meteo/';
 
 export interface WeatherCondition {
@@ -75,16 +78,17 @@ type Tipo = 'attuale' | 'previsioni' | 'aria' | 'citta';
 const round = (n: number) => n.toFixed(2);
 
 async function get<T>(tipo: Tipo, params: Record<string, string>): Promise<T> {
-  const query = new URLSearchParams({ tipo, ...params });
+  // Descrizioni del meteo e nomi delle citta' nella lingua dell'app.
+  const query = new URLSearchParams({ tipo, ...params, lang: LOCALE_INFO[currentLocale()].owm });
   let res: Response;
   try {
     res = await fetch(`${API}?${query}`);
   } catch {
-    throw new WeatherError('Nessuna connessione internet. Controlla Wi-Fi o dati.', 'network');
+    throw new WeatherError(msg().errors.network, 'network');
   }
-  if (res.status === 404) throw new WeatherError('Località non trovata.', 'notfound');
-  if (res.status === 429) throw new WeatherError('Troppe richieste, riprova tra un minuto.', 'general');
-  if (!res.ok) throw new WeatherError('Servizio meteo non disponibile, riprova.', 'general');
+  if (res.status === 404) throw new WeatherError(msg().errors.notFound, 'notfound');
+  if (res.status === 429) throw new WeatherError(msg().errors.tooMany, 'general');
+  if (!res.ok) throw new WeatherError(msg().errors.service, 'general');
   return res.json() as Promise<T>;
 }
 
@@ -112,7 +116,7 @@ export async function searchCities(query: string): Promise<CitySearchResult[]> {
   );
   return data.map(c => ({
     name: c.name,
-    localName: c.local_names?.it ?? c.name,
+    localName: c.local_names?.[currentLocale()] ?? c.name,
     country: c.country,
     state: c.state,
     lat: c.lat,
@@ -120,12 +124,13 @@ export async function searchCities(query: string): Promise<CitySearchResult[]> {
   }));
 }
 
-export const AIR_QUALITY_LABELS: Record<AirQualityIndex, { label: string; color: string }> = {
-  1: { label: 'Ottima', color: 'bg-emerald-400' },
-  2: { label: 'Buona', color: 'bg-lime-400' },
-  3: { label: 'Discreta', color: 'bg-yellow-400' },
-  4: { label: 'Scadente', color: 'bg-orange-400' },
-  5: { label: 'Pessima', color: 'bg-red-500' },
+/** Colore del pallino della qualita' dell'aria (il nome e' in messages.weather.airQuality). */
+export const AIR_QUALITY_COLORS: Record<AirQualityIndex, string> = {
+  1: 'bg-emerald-400',
+  2: 'bg-lime-400',
+  3: 'bg-yellow-400',
+  4: 'bg-orange-400',
+  5: 'bg-red-500',
 };
 
 /** Da m/s (OpenWeatherMap in unita' metriche) a km/h. */

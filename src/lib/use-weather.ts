@@ -14,6 +14,7 @@ import { saveLastPosition } from './daily-notification';
 import { KEYS, getStored } from './storage';
 import { syncWidgetWeather } from './widget';
 import { getCurrentPosition, LocationError, type SavedCity } from './location';
+import { msg } from '@/i18n/current';
 
 export interface WeatherBundle {
   current: CurrentWeather;
@@ -28,6 +29,11 @@ export type WeatherLoadError = { message: string; kind: 'network' | 'gps' | 'key
 /** Cache in memoria per pagina del pager: scorrere tra le citta' e' istantaneo. */
 const cache = new Map<string, WeatherBundle>();
 const TTL_MS = 10 * 60 * 1000;
+
+/** Dopo un cambio di lingua: le descrizioni del meteo vanno riscaricate nella nuova lingua. */
+export function clearWeatherCache() {
+  cache.clear();
+}
 
 async function load(target: 'gps' | SavedCity): Promise<WeatherBundle> {
   const coords = target === 'gps' ? await getCurrentPosition() : { lat: target.lat, lon: target.lon };
@@ -50,7 +56,7 @@ function toError(e: unknown): WeatherLoadError {
   if (e instanceof WeatherError) {
     return { message: e.message, kind: e.kind === 'notfound' ? 'general' : e.kind };
   }
-  return { message: 'Qualcosa è andato storto. Riprova.', kind: 'general' };
+  return { message: msg().errors.generic, kind: 'general' };
 }
 
 export function useWeather(target: 'gps' | SavedCity) {

@@ -64,4 +64,8 @@ export const KEYS = {
   dailyNotification: 'pa-daily-notification',
   /** Ultima posizione GPS riuscita, usata per le previsioni della notifica. */
   lastPosition: 'pa-last-position',
+  /** Lingua scelta: 'auto' (quella del telefono) o un codice di src/i18n/locales.ts. */
+  language: 'pa-language',
+  /** Unita' di misura: 'auto', 'metric' o 'imperial' (vedi units.ts). */
+  units: 'pa-units',
 } as const;

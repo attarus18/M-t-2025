@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!-- Testi del widget (ja). Vedi values/strings.xml. -->
+<resources>
+    <string name="widget_description">あなたの動物が地域の天気を教えてくれます</string>
+    <string name="widget_small_description">動物と気温を小さなスペースに</string>
+    <string name="widget_square_description">動物と気温、最高・最低気温</string>
+    <string name="widget_animal_description">今日の天気に合わせた服装の動物</string>
+    <string name="widget_open_app">アプリを開いて、地域の天気を確認しましょう。</string>
+    <string name="widget_open_app_short">アプリを開く</string>
+    <string name="widget_label_small">Meteo Zoo ミニ</string>
+    <string name="widget_label_square">Meteo Zoo スクエア</string>
+</resources>

@@ -5,10 +5,11 @@ import { cn } from '@/lib/utils';
 import { bodyFont, funFont } from '@/lib/fonts';
 import { PurchasesProvider } from '@/context/purchases-context';
 import { AppShell } from '@/components/app-shell';
+import { I18nProvider } from '@/i18n';
 
 export const metadata: Metadata = {
   title: 'Meteo Zoo',
-  description: 'Il meteo raccontato da un pollo con gli occhiali da sole (e dai suoi amici).',
+  description: 'Weather told by a chicken in sunglasses (and its friends).',
 };
 
 export const viewport: Viewport = {
@@ -24,7 +25,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="it">
       <body className={cn(bodyFont.variable, funFont.variable, 'min-h-screen font-body antialiased')}>
         <PurchasesProvider>
-          <AppShell>{children}</AppShell>
+          <I18nProvider>
+            <AppShell>{children}</AppShell>
+          </I18nProvider>
         </PurchasesProvider>
       </body>
     </html>

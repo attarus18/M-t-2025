@@ -7,6 +7,8 @@ import type { SavedCity } from './location';
 import { KEYS, getStored } from './storage';
 import { pickPhrase } from './animals';
 import { dailySummary, type CurrentWeather, type Forecast } from './weather';
+import { currentLocale, currentUnits, msg } from '@/i18n/current';
+import { LOCALE_INFO } from '@/i18n/locales';
 
 /**
  * Widget della schermata home (android/.../MeteoWidgetProvider.java).
@@ -24,17 +26,32 @@ interface MeteoWidgetPlugin {
     labels?: string;
     /** Frase mostrata nella home per questa scena, oggi. */
     phrase?: string;
+    /** Temperature in °F (il widget le riceve e le scarica sempre in °C). */
+    imperial?: boolean;
+    /** Testi del widget senza meteo, nella lingua dell'app. */
+    openApp?: string;
+    openAppShort?: string;
+    /** Codice lingua di OpenWeatherMap per il meteo che il widget scarica da solo. */
+    owmLang?: string;
     weather?: { temp: number; min: number; max: number; cond: string };
   }): Promise<void>;
 }
 
 const MeteoWidget = registerPlugin<MeteoWidgetPlugin>('MeteoWidget');
 
-const LABELS = JSON.stringify(Object.fromEntries(CONDITIONS.map(c => [c, CONDITION_INFO[c].label])));
-
+/** Animale, frasi, etichette e testi nella lingua in uso (si rimandano a ogni cambio di lingua). */
 function animalData() {
   const animal = chosenAnimal();
-  return { animal: animal.id, phrases: JSON.stringify(animal.phrases), labels: LABELS };
+  const t = msg();
+  return {
+    animal: animal.id,
+    phrases: JSON.stringify(animal.phrases),
+    labels: JSON.stringify(Object.fromEntries(CONDITIONS.map(c => [c, CONDITION_INFO[c].label]))),
+    imperial: currentUnits() === 'imperial',
+    openApp: t.widget.openApp,
+    openAppShort: t.widget.openAppShort,
+    owmLang: LOCALE_INFO[currentLocale()].owm,
+  };
 }
 
 /**

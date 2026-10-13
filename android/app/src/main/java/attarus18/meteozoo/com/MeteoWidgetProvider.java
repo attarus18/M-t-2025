@@ -97,11 +97,11 @@ public class MeteoWidgetProvider extends AppWidgetProvider {
             // Ancora nessun meteo: invito ad aprire l'app.
             v.setInt(R.id.widget_root, "setBackgroundResource", background("sole"));
             setAnimal(context, v, animal, "sole");
-            v.setTextViewText(R.id.widget_city, big || square ? "Meteo Zoo" : "Apri l'app");
+            v.setTextViewText(R.id.widget_city, big || square ? "Meteo Zoo" : p.getString("openAppShort", context.getString(R.string.widget_open_app_short)));
             v.setTextViewText(R.id.widget_temp, "");
             if (big) {
                 v.setTextViewText(R.id.widget_label, "");
-                v.setTextViewText(R.id.widget_phrase, "Apri l'app per vedere il meteo della tua zona.");
+                v.setTextViewText(R.id.widget_phrase, p.getString("openApp", context.getString(R.string.widget_open_app)));
             }
             if (square) v.setTextViewText(R.id.widget_range, "");
             return v;
@@ -110,15 +110,21 @@ public class MeteoWidgetProvider extends AppWidgetProvider {
         v.setInt(R.id.widget_root, "setBackgroundResource", background(cond));
         setAnimal(context, v, animal, cond);
         v.setTextViewText(R.id.widget_city, p.getString("city", ""));
-        v.setTextViewText(R.id.widget_temp, Math.round(p.getFloat("temp", 0)) + "°");
-        long max = Math.round(p.getFloat("max", 0));
-        long min = Math.round(p.getFloat("min", 0));
+        // Le temperature sono salvate in °C; l'app dice se mostrarle in °F.
+        boolean imperial = p.getBoolean("imperial", false);
+        v.setTextViewText(R.id.widget_temp, degrees(p.getFloat("temp", 0), imperial) + "°");
+        long max = degrees(p.getFloat("max", 0), imperial);
+        long min = degrees(p.getFloat("min", 0), imperial);
         if (big) {
             v.setTextViewText(R.id.widget_label, label(p, cond) + "  ·  max " + max + "° · min " + min + "°");
             v.setTextViewText(R.id.widget_phrase, phrase(p, animal, cond));
         }
         if (square) v.setTextViewText(R.id.widget_range, "↑" + max + "°\n↓" + min + "°");
         return v;
+    }
+
+    private static long degrees(float celsius, boolean imperial) {
+        return Math.round(imperial ? celsius * 9 / 5 + 32 : celsius);
     }
 
     private static void setAnimal(Context context, RemoteViews v, String animal, String cond) {
@@ -190,7 +196,8 @@ public class MeteoWidgetProvider extends AppWidgetProvider {
     /** Scarica il meteo attuale dal ponte e lo salva (stessa logica di pickCondition). */
     static void fetchWeather(Context context) throws Exception {
         SharedPreferences p = prefs(context);
-        String url = String.format(Locale.ROOT, "%s?tipo=attuale&lat=%.2f&lon=%.2f", API, p.getFloat("lat", 0), p.getFloat("lon", 0));
+        String url = String.format(Locale.ROOT, "%s?tipo=attuale&lat=%.2f&lon=%.2f&lang=%s", API, p.getFloat("lat", 0), p.getFloat("lon", 0),
+            p.getString("owmLang", "it"));
         HttpURLConnection c = (HttpURLConnection) new URL(url).openConnection();
         c.setConnectTimeout(6000);
         c.setReadTimeout(6000);

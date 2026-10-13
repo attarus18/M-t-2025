@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!-- Testi del widget (tr). Vedi values/strings.xml. -->
+<resources>
+    <string name="widget_description">Bölgendeki hava durumunu hayvanın anlatıyor</string>
+    <string name="widget_small_description">Hayvanın ve sıcaklık, küçücük bir alanda</string>
+    <string name="widget_square_description">Hayvanın, sıcaklık, en yüksek ve en düşük değerlerle</string>
+    <string name="widget_animal_description">Bugünün havasına göre giyinmiş hayvanın</string>
+    <string name="widget_open_app">Bölgendeki hava durumunu görmek için uygulamayı aç.</string>
+    <string name="widget_open_app_short">Uygulamayı aç</string>
+    <string name="widget_label_small">Meteo Zoo mini</string>
+    <string name="widget_label_square">Meteo Zoo kare</string>
+</resources>

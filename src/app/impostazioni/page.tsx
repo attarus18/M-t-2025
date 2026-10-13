@@ -3,8 +3,10 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import { Capacitor } from '@capacitor/core';
-import { Bell, ChevronRight, ShoppingBag, Shield, Sparkles } from 'lucide-react';
+import { Bell, Check, ChevronRight, Globe, Ruler, ShoppingBag, Shield, Sparkles } from 'lucide-react';
 import { usePurchases } from '@/context/purchases-context';
+import { useI18n } from '@/i18n';
+import { LOCALES, LOCALE_INFO, type LanguagePref } from '@/i18n/locales';
 import { privacyOptionsRequired, showPrivacyOptions } from '@/lib/ads';
 import {
   DEFAULT_DAILY_NOTIFICATION,
@@ -14,13 +16,16 @@ import {
   type DailyNotificationSettings,
 } from '@/lib/daily-notification';
 import { KEYS, useStored } from '@/lib/storage';
+import type { UnitsPref } from '@/lib/units';
 import { useAnimal } from '@/lib/use-animal';
+import { cn } from '@/lib/utils';
 
-const APP_VERSION = '1.0.3';
+const APP_VERSION = '1.0.9';
 
 export default function SettingsPage() {
   const { hasAll, hasEveryPack, restore } = usePurchases();
   const { animal } = useAnimal();
+  const { t } = useI18n();
   const [showPrivacy, setShowPrivacy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
 
@@ -32,46 +37,119 @@ export default function SettingsPage() {
     setNotice(null);
     try {
       const ok = await restore();
-      setNotice(ok ? 'Acquisti ripristinati!' : 'Nessun acquisto trovato su questo account Google.');
+      setNotice(ok ? t.shop.restored : t.shop.noPurchases);
     } catch {
-      setNotice('Ripristino non riuscito. Controlla la connessione.');
+      setNotice(t.shop.restoreFailed);
     }
   };
 
   return (
     <div className="space-y-5">
-      <h1 className="font-fun text-3xl font-bold drop-shadow">Altro</h1>
+      <h1 className="font-fun text-3xl font-bold drop-shadow">{t.settings.title}</h1>
 
-      <Section title="Pacchetti animali" icon={ShoppingBag}>
+      <Section title={t.settings.packs} icon={ShoppingBag}>
         {hasAll ? (
-          <p className="py-2 font-semibold">Hai tutti i pacchetti, anche quelli futuri. {animal.emoji}</p>
+          <p className="py-2 font-semibold">
+            {t.settings.hasAll} {animal.emoji}
+          </p>
         ) : (
-          hasEveryPack && <p className="py-2 font-semibold">Hai tutti i pacchetti. {animal.emoji}</p>
+          hasEveryPack && (
+            <p className="py-2 font-semibold">
+              {t.settings.hasEvery} {animal.emoji}
+            </p>
+          )
         )}
-        <Row href="/premium/">{hasEveryPack ? 'Vedi i pacchetti' : 'Negozio dei pacchetti'}</Row>
-        <Row onClick={onRestore}>Ripristina acquisti</Row>
+        <Row href="/premium/">{hasEveryPack ? t.settings.seePacks : t.settings.shop}</Row>
+        <Row onClick={onRestore}>{t.shop.restore}</Row>
         {notice && <p className="pt-2 text-sm font-semibold opacity-90">{notice}</p>}
       </Section>
 
+      <LanguageSection />
+
+      <UnitsSection />
+
       <DailyNotificationSection />
 
-      <Section title="Divertiti" icon={Sparkles}>
-        <Row href="/anteprima/">Gioca con tutti gli animali</Row>
+      <Section title={t.settings.fun} icon={Sparkles}>
+        <Row href="/anteprima/">{t.settings.playAll}</Row>
       </Section>
 
-      <Section title="Info e privacy" icon={Shield}>
-        {showPrivacy && <Row onClick={() => showPrivacyOptions()}>Preferenze privacy annunci</Row>}
-        <Row href="/privacy/">Informativa sulla privacy</Row>
-        <p className="pt-3 text-xs opacity-75">
-          Dati meteo forniti da OpenWeatherMap. Meteo Zoo versione {APP_VERSION}.
-        </p>
+      <Section title={t.settings.info} icon={Shield}>
+        {showPrivacy && <Row onClick={() => showPrivacyOptions()}>{t.settings.adPrivacy}</Row>}
+        <Row href="/privacy/">{t.settings.privacyPolicy}</Row>
+        <p className="pt-3 text-xs opacity-75">{t.settings.footer(APP_VERSION)}</p>
       </Section>
     </div>
   );
 }
 
+/** Lingua dell'app: automatica (quella del telefono) o scelta a mano. */
+function LanguageSection() {
+  const { t, languagePref, setLanguagePref } = useI18n();
+  const [open, setOpen] = useState(false);
+  const options: LanguagePref[] = ['auto', ...LOCALES];
+  const label = (pref: LanguagePref) => (pref === 'auto' ? t.settings.languageAuto : LOCALE_INFO[pref].name);
+
+  return (
+    <Section title={t.settings.language} icon={Globe}>
+      <button onClick={() => setOpen(!open)} className="flex w-full items-center justify-between py-3 text-left font-bold">
+        {label(languagePref)}
+        <ChevronRight className={cn('h-4 w-4 opacity-60 transition-transform', open && 'rotate-90')} />
+      </button>
+      {open && (
+        <div className="border-t border-white/10">
+          {options.map(pref => (
+            <button
+              key={pref}
+              // Il nome di ogni lingua e' scritto nella lingua stessa: va letto con la sua pronuncia.
+              lang={pref === 'auto' ? undefined : pref}
+              onClick={() => {
+                setOpen(false);
+                setLanguagePref(pref);
+              }}
+              className="flex w-full items-center justify-between py-2.5 text-left font-semibold"
+            >
+              {label(pref)}
+              {pref === languagePref && <Check className="h-4 w-4" strokeWidth={3} />}
+            </button>
+          ))}
+        </div>
+      )}
+    </Section>
+  );
+}
+
+/** °C e km/h oppure °F e mph; in automatico secondo il paese del telefono. */
+function UnitsSection() {
+  const { t, unitsPref, setUnitsPref } = useI18n();
+  const options: { value: UnitsPref; label: string }[] = [
+    { value: 'auto', label: t.settings.unitsAuto },
+    { value: 'metric', label: '°C · km/h' },
+    { value: 'imperial', label: '°F · mph' },
+  ];
+  return (
+    <Section title={t.settings.units} icon={Ruler}>
+      <div className="grid grid-cols-3 gap-2 py-2">
+        {options.map(o => (
+          <button
+            key={o.value}
+            onClick={() => setUnitsPref(o.value)}
+            className={cn(
+              'rounded-2xl px-2 py-2.5 text-sm font-bold transition active:scale-95',
+              unitsPref === o.value ? 'bg-white text-sky-700' : 'bg-white/15',
+            )}
+          >
+            {o.label}
+          </button>
+        ))}
+      </div>
+    </Section>
+  );
+}
+
 /** Notifica giornaliera con il meteo del giorno nella propria posizione. */
 function DailyNotificationSection() {
+  const { t } = useI18n();
   const [settings, setSettings] = useStored<DailyNotificationSettings>(KEYS.dailyNotification, DEFAULT_DAILY_NOTIFICATION);
   const [isNative, setIsNative] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
@@ -86,23 +164,23 @@ function DailyNotificationSection() {
     setNotice(null);
     if (settings.enabled) return update({ ...settings, enabled: false });
     if (!(await requestNotificationPermission())) {
-      setNotice('Permesso negato: attiva le notifiche di Meteo Zoo dalle impostazioni di Android.');
+      setNotice(t.settings.permissionDenied);
       return;
     }
     update({ ...settings, enabled: true });
-    setNotice('Fatto! Ogni giorno riceverai il meteo della tua posizione.');
+    setNotice(t.settings.enabled);
   };
 
   const time = `${String(settings.hour).padStart(2, '0')}:${String(settings.minute).padStart(2, '0')}`;
 
   return (
-    <Section title="Notifiche" icon={Bell}>
+    <Section title={t.settings.notifications} icon={Bell}>
       {isNative ? (
         <>
           <button onClick={toggle} className="flex w-full items-center justify-between gap-3 py-3 text-left font-bold">
             <span>
-              Meteo del giorno
-              <span className="block text-xs font-semibold opacity-75">Il tuo animale ti racconta che tempo farà</span>
+              {t.settings.dailyWeather}
+              <span className="block text-xs font-semibold opacity-75">{t.settings.dailyWeatherHint}</span>
             </span>
             <span
               role="switch"
@@ -116,7 +194,7 @@ function DailyNotificationSection() {
           </button>
           {settings.enabled && (
             <label className="flex items-center justify-between border-t border-white/10 py-3 font-bold">
-              Ogni giorno alle
+              {t.settings.everyDayAt}
               <input
                 type="time"
                 value={time}
@@ -130,20 +208,18 @@ function DailyNotificationSection() {
           )}
           {settings.enabled && (
             <button
-              onClick={async () => setNotice((await sendTestNotification()) ?? 'Notifica di prova in arrivo!')}
+              onClick={async () => setNotice((await sendTestNotification()) ?? t.settings.testComing)}
               className="flex w-full items-center justify-between border-t border-white/10 py-3 text-left font-bold"
             >
-              Manda una notifica di prova
+              {t.settings.sendTest}
               <ChevronRight className="h-4 w-4 opacity-60" />
             </button>
           )}
           {notice && <p className="pt-1 text-sm font-semibold opacity-90">{notice}</p>}
-          <p className="pt-2 text-xs opacity-75">
-            Usa l'ultima posizione rilevata. Le previsioni si aggiornano ogni volta che apri l'app.
-          </p>
+          <p className="pt-2 text-xs opacity-75">{t.settings.notificationsHint}</p>
         </>
       ) : (
-        <p className="py-2 text-sm font-semibold opacity-85">Disponibile nell'app per Android.</p>
+        <p className="py-2 text-sm font-semibold opacity-85">{t.common.androidOnly}</p>
       )}
     </Section>
   );

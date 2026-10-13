@@ -4,6 +4,8 @@ import { Capacitor } from '@capacitor/core';
 import { animalImage, type Animal } from './animals';
 import { CONDITION_INFO, type ConditionId } from './conditions';
 import { bodyFont, funFont } from './fonts';
+import { temp } from './units';
+import { currentUnits, msg } from '@/i18n/current';
 
 export const STORE_URL = 'https://play.google.com/store/apps/details?id=attarus18.meteozoo.com';
 
@@ -19,22 +21,33 @@ export interface ShareForecast {
 }
 
 function shareText(f: ShareForecast) {
-  return `${f.animal.emoji} ${f.city}, ${f.when}: ${Math.round(f.temp)}° e ${f.description}.\n"${f.phrase}"\n\nIl meteo raccontato dagli animali: ${STORE_URL}`;
+  return msg().share.text({
+    emoji: f.animal.emoji,
+    city: f.city,
+    when: f.when,
+    temp: `${temp(f.temp, currentUnits())}°`,
+    description: f.description,
+    phrase: f.phrase,
+    url: STORE_URL,
+  });
 }
+
+// Il giapponese si scrive senza spazi: li' si puo' andare a capo dopo ogni carattere.
+const TOKENS = /[぀-ヿ㐀-鿿＀-￯]|[^\s぀-ヿ㐀-鿿＀-￯]+|\s+/g;
 
 function wrapLines(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string[] {
   const lines: string[] = [];
   let line = '';
-  for (const word of text.split(/\s+/)) {
-    const candidate = line ? `${line} ${word}` : word;
-    if (ctx.measureText(candidate).width > maxWidth && line) {
-      lines.push(line);
-      line = word;
+  for (const token of text.match(TOKENS) ?? []) {
+    const candidate = line + token;
+    if (ctx.measureText(candidate.trimEnd()).width > maxWidth && line.trim()) {
+      lines.push(line.trim());
+      line = token.trim() ? token : '';
     } else {
       line = candidate;
     }
   }
-  if (line) lines.push(line);
+  if (line.trim()) lines.push(line.trim());
   return lines;
 }
 
@@ -127,7 +140,7 @@ export async function renderForecastImage(f: ShareForecast): Promise<string> {
   ctx.shadowBlur = 16;
   ctx.font = `700 170px ${fun}`;
   const tempY = imgTop + imgSize - 30;
-  ctx.fillText(`${Math.round(f.temp)}°`, W / 2 + 20, tempY);
+  ctx.fillText(`${temp(f.temp, currentUnits())}°`, W / 2 + 20, tempY);
   ctx.font = `600 44px ${body}`;
   const desc = f.description.charAt(0).toUpperCase() + f.description.slice(1);
   ctx.fillText(desc, W / 2, tempY + 175);
@@ -140,7 +153,7 @@ export async function renderForecastImage(f: ShareForecast): Promise<string> {
   // Fonte dei dati (richiesta da OpenWeatherMap)
   ctx.font = `600 24px ${body}`;
   ctx.globalAlpha = 0.65;
-  ctx.fillText('Dati meteo: OpenWeather', W / 2, H - 32);
+  ctx.fillText(msg().common.weatherSource, W / 2, H - 32);
   ctx.globalAlpha = 1;
 
   return canvas.toDataURL('image/png');
@@ -150,7 +163,7 @@ export async function renderForecastImage(f: ShareForecast): Promise<string> {
 export async function shareForecast(f: ShareForecast) {
   const text = shareText(f);
   const dataUrl = await renderForecastImage(f);
-  const filename = `previsioni-animali-${Date.now()}.png`;
+  const filename = `meteo-zoo-${Date.now()}.png`;
 
   if (Capacitor.isNativePlatform()) {
     const [{ Filesystem, Directory }, { Share }] = await Promise.all([
@@ -162,7 +175,7 @@ export async function shareForecast(f: ShareForecast) {
       data: dataUrl.split(',')[1],
       directory: Directory.Cache,
     });
-    await Share.share({ title: 'Meteo Zoo', text, files: [uri], dialogTitle: 'Condividi il meteo' });
+    await Share.share({ title: 'Meteo Zoo', text, files: [uri], dialogTitle: msg().common.shareDialog });
     return;
   }
 

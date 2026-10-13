@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!-- Testi del widget (pt). Vedi values/strings.xml. -->
+<resources>
+    <string name="widget_description">A previsão do tempo da sua região contada pelo seu animal</string>
+    <string name="widget_small_description">Seu animal e a temperatura, em pouco espaço</string>
+    <string name="widget_square_description">Seu animal com a temperatura, máxima e mínima</string>
+    <string name="widget_animal_description">Seu animal vestido para o tempo de hoje</string>
+    <string name="widget_open_app">Abra o app para ver o tempo da sua região.</string>
+    <string name="widget_open_app_short">Abrir o app</string>
+    <string name="widget_label_small">Meteo Zoo mini</string>
+    <string name="widget_label_square">Meteo Zoo quadrado</string>
+</resources>

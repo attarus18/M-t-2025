@@ -1,11 +1,16 @@
 <?xml version='1.0' encoding='utf-8'?>
+<!-- Testi predefiniti (inglese); le traduzioni sono in values-<lingua>. -->
 <resources>
     <string name="app_name">Meteo Zoo</string>
     <string name="title_activity_main">Meteo Zoo</string>
     <string name="package_name">attarus18.meteozoo.com</string>
     <string name="custom_url_scheme">attarus18.meteozoo.com</string>
-    <string name="widget_description">Il meteo della tua zona raccontato dal tuo animale</string>
-    <string name="widget_small_description">Il tuo animale e la temperatura, in poco spazio</string>
-    <string name="widget_square_description">Il tuo animale con temperatura, massima e minima</string>
-    <string name="widget_animal_description">Il tuo animale vestito per il meteo di oggi</string>
+    <string name="widget_description">Your area\'s weather told by your animal</string>
+    <string name="widget_small_description">Your animal and the temperature, in a tiny space</string>
+    <string name="widget_square_description">Your animal with temperature, high and low</string>
+    <string name="widget_animal_description">Your animal dressed for today\'s weather</string>
+    <string name="widget_open_app">Open the app to see the weather in your area.</string>
+    <string name="widget_open_app_short">Open the app</string>
+    <string name="widget_label_small">Meteo Zoo mini</string>
+    <string name="widget_label_square">Meteo Zoo square</string>
 </resources>

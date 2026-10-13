@@ -6,6 +6,7 @@ import { Check, ShoppingBag } from 'lucide-react';
 import { AnimalArt } from '@/components/animal-art';
 import { BuyButton } from '@/components/buy-button';
 import { usePurchases } from '@/context/purchases-context';
+import { useI18n } from '@/i18n';
 import { ANIMALS, comingSoonAnimals } from '@/lib/animals';
 import { ALL_PACKS_PRODUCT, PACKS } from '@/lib/packs';
 
@@ -16,15 +17,16 @@ export default function ShopPage() {
   const { hasAll, hasEveryPack, isPackUnlocked, restore } = usePurchases();
   const [isNative, setIsNative] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
+  const { t } = useI18n();
   useEffect(() => setIsNative(Capacitor.isNativePlatform()), []);
 
   const onRestore = async () => {
     setNotice(null);
     try {
       const ok = await restore();
-      setNotice(ok ? 'Acquisti ripristinati!' : 'Nessun acquisto trovato su questo account Google.');
+      setNotice(ok ? t.shop.restored : t.shop.noPurchases);
     } catch {
-      setNotice('Ripristino non riuscito. Controlla la connessione e riprova.');
+      setNotice(t.shop.restoreFailed);
     }
   };
 
@@ -34,21 +36,21 @@ export default function ShopPage() {
         <div className="flex h-16 w-16 items-center justify-center rounded-full bg-amber-400 text-amber-950 shadow-lg">
           <ShoppingBag className="h-8 w-8" />
         </div>
-        <h1 className="mt-3 font-fun text-3xl font-bold drop-shadow">Pacchetti animali</h1>
-        <p className="font-semibold opacity-90">Compri una volta, restano tuoi per sempre.</p>
+        <h1 className="mt-3 font-fun text-3xl font-bold drop-shadow">{t.shop.title}</h1>
+        <p className="font-semibold opacity-90">{t.shop.subtitle}</p>
       </header>
 
       {/* Tutti i pacchetti */}
       <section className="rounded-3xl bg-gradient-to-br from-amber-300 to-orange-400 p-5 text-amber-950 shadow-xl">
         <div className="flex items-center justify-between">
-          <h2 className="font-fun text-2xl font-bold">🎁 Tutti i pacchetti</h2>
-          <span className="rounded-full bg-white/70 px-2.5 py-1 text-[10px] font-bold uppercase">Conviene</span>
+          <h2 className="font-fun text-2xl font-bold">🎁 {t.shop.allPacks}</h2>
+          <span className="rounded-full bg-white/70 px-2.5 py-1 text-[10px] font-bold uppercase">{t.shop.bestValue}</span>
         </div>
         <ul className="mt-2 space-y-1 text-sm font-semibold">
           {[
-            `Tutti i ${PAID_PACKS.length} pacchetti di oggi`,
-            'Anche tutti i pacchetti che usciranno',
-            'Nessuna pubblicità',
+            t.shop.allToday(PAID_PACKS.length),
+            t.shop.allFuture,
+            t.shop.noAds,
           ].map(t => (
             <li key={t} className="flex items-center gap-2">
               <Check className="h-4 w-4 shrink-0" strokeWidth={3} /> {t}
@@ -57,21 +59,21 @@ export default function ShopPage() {
         </ul>
         <div className="mt-4">
           {hasAll ? (
-            <p className="rounded-2xl bg-white/70 p-3 text-center font-fun font-bold">Ce l&apos;hai già. Grazie! 💛</p>
+            <p className="rounded-2xl bg-white/70 p-3 text-center font-fun font-bold">{t.shop.alreadyAll}</p>
           ) : hasEveryPack ? (
             // Ha comprato i pacchetti uno a uno: non gli si rivende cio' che ha gia'.
             <p className="rounded-2xl bg-white/70 p-3 text-center font-fun font-bold">
-              Hai già tutti i pacchetti. Grazie! 💛
+              {t.shop.alreadyEvery}
             </p>
           ) : (
-            <BuyButton productId={ALL_PACKS_PRODUCT} label="Sblocca tutto" className="bg-white text-orange-700" />
+            <BuyButton productId={ALL_PACKS_PRODUCT} label={t.shop.unlockAll} className="bg-white text-orange-700" />
           )}
         </div>
       </section>
 
       {/* Pacchetti singoli */}
       <section className="space-y-3">
-        <h2 className="text-[11px] font-bold uppercase tracking-widest opacity-80">Oppure un pacchetto alla volta</h2>
+        <h2 className="text-[11px] font-bold uppercase tracking-widest opacity-80">{t.shop.onePack}</h2>
         {PAID_PACKS.map(pack => {
           const animals = ANIMALS.filter(a => a.pack === pack.id);
           const unlocked = isPackUnlocked(pack.id);
@@ -98,14 +100,14 @@ export default function ShopPage() {
                 ))}
               </div>
               {comingSoonAnimals(pack.id).length > 0 && (
-                <p className="text-[11px] font-semibold opacity-75">✨ = in arrivo, incluso gratis per chi ha il pacchetto</p>
+                <p className="text-[11px] font-semibold opacity-75">{t.shop.comingSoonNote}</p>
               )}
               {unlocked ? (
                 <p className="flex items-center justify-center gap-1.5 rounded-full bg-white/20 py-2.5 text-sm font-bold">
-                  <Check className="h-4 w-4" strokeWidth={3} /> Sbloccato
+                  <Check className="h-4 w-4" strokeWidth={3} /> {t.animals.unlocked}
                 </p>
               ) : (
-                <BuyButton productId={pack.productId!} label={`Sblocca ${pack.name}`} />
+                <BuyButton productId={pack.productId!} label={t.animals.unlockPack(pack.name)} />
               )}
             </div>
           );
@@ -113,14 +115,13 @@ export default function ShopPage() {
       </section>
 
       <p className="text-center text-xs opacity-80">
-        Pagamento unico gestito da Google Play, nessun abbonamento. Con qualsiasi acquisto spariscono anche le
-        pubblicità.
+        {t.shop.footer}
       </p>
 
       {notice && <p className="rounded-2xl bg-black/20 p-3 text-center text-sm font-semibold">{notice}</p>}
       {isNative && (
         <button onClick={onRestore} className="w-full text-center text-sm font-bold underline">
-          Ripristina acquisti
+          {t.shop.restore}
         </button>
       )}
     </div>

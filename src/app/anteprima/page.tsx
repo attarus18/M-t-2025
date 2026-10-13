@@ -6,6 +6,7 @@ import { ChevronLeft, Lock } from 'lucide-react';
 import { AnimalArt } from '@/components/animal-art';
 import { WeatherEffects } from '@/components/weather-effects';
 import { usePurchases } from '@/context/purchases-context';
+import { useI18n } from '@/i18n';
 import { ANIMALS, pickPhrase } from '@/lib/animals';
 import { CONDITIONS, CONDITION_INFO, type ConditionId } from '@/lib/conditions';
 import { getPack } from '@/lib/packs';
@@ -23,6 +24,7 @@ export default function PreviewPage() {
   const [picked, setPicked] = useState<string | null>(null);
   const [condition, setCondition] = useState<ConditionId>('sole');
   const selectedRef = useRef<HTMLButtonElement>(null);
+  const { t } = useI18n();
 
   const animal = ANIMALS.find(a => a.id === (picked ?? current.id)) ?? current;
   const locked = !isAnimalUnlocked(animal);
@@ -39,7 +41,7 @@ export default function PreviewPage() {
       <WeatherEffects key={condition} condition={condition} />
 
       <Link href="/impostazioni/" className="-ml-1 inline-flex items-center self-start font-semibold opacity-85">
-        <ChevronLeft className="h-4 w-4" /> Altro
+        <ChevronLeft className="h-4 w-4" /> {t.nav.more}
       </Link>
 
       {/* Selettore degli animali */}
@@ -81,7 +83,7 @@ export default function PreviewPage() {
           href="/premium/"
           className="mt-2 flex items-center gap-1.5 rounded-full bg-amber-400 px-4 py-2 text-sm font-bold text-amber-950 shadow-lg active:scale-95"
         >
-          <Lock className="h-3.5 w-3.5" strokeWidth={3} /> Ti piace? Sblocca {pack.emoji} {pack.name}
+          <Lock className="h-3.5 w-3.5" strokeWidth={3} /> {t.preview.likeIt(`${pack.emoji} ${pack.name}`)}
         </Link>
       )}
 
@@ -96,7 +98,7 @@ export default function PreviewPage() {
             )}
           >
             <span className="text-xl">{CONDITION_INFO[c].emoji}</span>
-            {CONDITION_INFO[c].label.split(' ')[0]}
+            {t.conditions[c].short}
           </button>
         ))}
       </div>

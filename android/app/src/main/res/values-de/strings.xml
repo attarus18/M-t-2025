@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!-- Testi del widget (de). Vedi values/strings.xml. -->
+<resources>
+    <string name="widget_description">Das Wetter in deiner Nähe, erzählt von deinem Tier</string>
+    <string name="widget_small_description">Dein Tier und die Temperatur, auf kleinstem Raum</string>
+    <string name="widget_square_description">Dein Tier mit Temperatur, Höchst- und Tiefstwert</string>
+    <string name="widget_animal_description">Dein Tier, passend zum heutigen Wetter angezogen</string>
+    <string name="widget_open_app">Öffne die App, um das Wetter in deiner Nähe zu sehen.</string>
+    <string name="widget_open_app_short">App öffnen</string>
+    <string name="widget_label_small">Meteo Zoo mini</string>
+    <string name="widget_label_square">Meteo Zoo quadratisch</string>
+</resources>

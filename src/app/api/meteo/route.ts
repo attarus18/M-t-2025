@@ -3,7 +3,7 @@
  * finisce ne' nel sito ne' nell'APK. Attivo solo nella versione su Vercel: la
  * build statica per l'APK (scripts/build-static.mjs) lascia fuori questa route.
  *
- * GET /api/meteo?tipo=attuale|previsioni|aria&lat=..&lon=..
+ * GET /api/meteo?tipo=attuale|previsioni|aria&lat=..&lon=..[&lang=en]
  * GET /api/meteo?tipo=citta&q=..
  *
  * Le risposte restano nella cache CDN di Vercel (stessa URL = una sola chiamata
@@ -18,6 +18,10 @@ const ENDPOINTS = {
   citta: { path: '/geo/1.0/direct', cache: 86400, extra: { limit: '5' } },
 } as const;
 type Tipo = keyof typeof ENDPOINTS;
+
+// Lingue delle descrizioni del meteo (codici OpenWeatherMap, vedi src/i18n/locales.ts).
+// Senza "lang" resta l'italiano, per le versioni dell'app precedenti alle traduzioni.
+const LANGS = new Set(['it', 'en', 'es', 'pt_br', 'fr', 'de', 'ja', 'kr', 'id', 'tr']);
 
 // Limite per IP (per istanza della funzione: un freno agli abusi, la vera
 // protezione della quota e' la cache CDN).
@@ -90,6 +94,8 @@ export async function GET(request: Request) {
     params.set('lat', lat);
     params.set('lon', lon);
   }
+  const lang = url.searchParams.get('lang');
+  if ((tipo === 'attuale' || tipo === 'previsioni') && lang && LANGS.has(lang)) params.set('lang', lang);
   params.set('appid', key);
 
   let res: Response;

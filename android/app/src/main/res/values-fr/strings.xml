@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!-- Testi del widget (fr). Vedi values/strings.xml. -->
+<resources>
+    <string name="widget_description">La météo de chez vous racontée par votre animal</string>
+    <string name="widget_small_description">Votre animal et la température, en tout petit</string>
+    <string name="widget_square_description">Votre animal avec la température, maximale et minimale</string>
+    <string name="widget_animal_description">Votre animal habillé pour la météo du jour</string>
+    <string name="widget_open_app">Ouvrez l\'app pour voir la météo de chez vous.</string>
+    <string name="widget_open_app_short">Ouvrir l\'app</string>
+    <string name="widget_label_small">Meteo Zoo mini</string>
+    <string name="widget_label_square">Meteo Zoo carré</string>
+</resources>

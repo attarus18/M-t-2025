@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Capacitor } from '@capacitor/core';
 import { Loader2 } from 'lucide-react';
 import { usePurchases } from '@/context/purchases-context';
+import { useI18n } from '@/i18n';
 import { cn } from '@/lib/utils';
 
 function isUserCancel(error: unknown): boolean {
@@ -25,6 +26,7 @@ export function BuyButton({
 }) {
   const { prices, purchase, isLoading } = usePurchases();
   const [busy, setBusy] = useState(false);
+  const { t } = useI18n();
   const [notice, setNotice] = useState<string | null>(null);
   const [isNative, setIsNative] = useState(false);
   useEffect(() => setIsNative(Capacitor.isNativePlatform()), []);
@@ -37,16 +39,16 @@ export function BuyButton({
     try {
       const ok = await purchase(productId);
       if (ok) onBought?.();
-      else setNotice('Google Play sta completando il pagamento: lo sblocco arriverà a breve.');
+      else setNotice(t.shop.pending);
     } catch (error) {
-      if (!isUserCancel(error)) setNotice('Acquisto non completato. Riprova tra qualche istante.');
+      if (!isUserCancel(error)) setNotice(t.shop.buyFailed);
     } finally {
       setBusy(false);
     }
   };
 
   if (!isNative) {
-    return <p className="text-center text-xs font-semibold opacity-80">Acquistabile nell&apos;app per Android.</p>;
+    return <p className="text-center text-xs font-semibold opacity-80">{t.common.buyAndroidOnly}</p>;
   }
 
   return (
@@ -59,7 +61,7 @@ export function BuyButton({
           className,
         )}
       >
-        {busy ? <Loader2 className="h-5 w-5 animate-spin" /> : price ? `${label} · ${price}` : 'Non disponibile al momento'}
+        {busy ? <Loader2 className="h-5 w-5 animate-spin" /> : price ? `${label} · ${price}` : t.shop.unavailable}
       </button>
       {notice && <p className="text-center text-xs font-semibold opacity-90">{notice}</p>}
     </div>

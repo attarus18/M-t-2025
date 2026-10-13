@@ -44,7 +44,7 @@
         <receiver
             android:name=".MeteoWidgetSmallProvider"
             android:exported="false"
-            android:label="Meteo Zoo mini">
+            android:label="@string/widget_label_small">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -55,7 +55,7 @@
         <receiver
             android:name=".MeteoWidgetSquareProvider"
             android:exported="false"
-            android:label="Meteo Zoo quadrato">
+            android:label="@string/widget_label_square">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>

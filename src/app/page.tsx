@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { Heart, Navigation, Plus, RefreshCw } from 'lucide-react';
 import { WeatherView } from '@/components/weather-view';
+import { useI18n } from '@/i18n';
 import { usePurchases } from '@/context/purchases-context';
 import { onBrowseForAds } from '@/lib/ads';
 import { cityId, useSavedCities, type SavedCity } from '@/lib/location';
@@ -16,6 +17,7 @@ export default function HomePage() {
   const { cities, add, remove, has } = useSavedCities();
   const { animal } = useAnimal();
   const { hasPurchased } = usePurchases();
+  const { t, tag } = useI18n();
   const [currentId, setCurrentId] = useStored<string>(KEYS.currentCity, 'gps');
 
   const pages: ('gps' | SavedCity)[] = ['gps', ...cities];
@@ -64,7 +66,7 @@ export default function HomePage() {
     else add({ id, name: data.current.name, country: data.current.sys.country, lat: data.coords.lat, lon: data.coords.lon });
   };
 
-  const title = target === 'gps' ? data?.current.name ?? 'Posizione attuale' : target.name;
+  const title = target === 'gps' ? data?.current.name ?? t.home.currentLocation : target.name;
 
   return (
     <div onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} className="min-h-[70vh]">
@@ -72,7 +74,7 @@ export default function HomePage() {
         <button
           onClick={() => reload(true)}
           className="rounded-full p-2 active:bg-white/15"
-          aria-label="Aggiorna"
+          aria-label={t.common.refresh}
         >
           <RefreshCw className={cn('h-5 w-5', loading && 'animate-spin')} />
         </button>
@@ -82,7 +84,7 @@ export default function HomePage() {
             {title}
           </h1>
           <p className="text-xs font-semibold capitalize opacity-80">
-            {new Date().toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long' })}
+            {new Date().toLocaleDateString(tag, { weekday: 'long', day: 'numeric', month: 'long' })}
           </p>
           {pages.length > 1 && (
             <div className="mt-1.5 flex items-center gap-1.5">
@@ -90,7 +92,7 @@ export default function HomePage() {
                 <button
                   key={p === 'gps' ? 'gps' : p.id}
                   onClick={() => goTo(i)}
-                  aria-label={p === 'gps' ? 'Posizione attuale' : p.name}
+                  aria-label={p === 'gps' ? t.home.currentLocation : p.name}
                   className={cn('rounded-full transition-all', i === index ? 'h-2 w-2 bg-white' : 'h-1.5 w-1.5 bg-white/45')}
                 />
               ))}
@@ -98,11 +100,11 @@ export default function HomePage() {
           )}
         </div>
         {data ? (
-          <button onClick={toggleSaved} className="rounded-full p-2 active:bg-white/15" aria-label="Salva città">
+          <button onClick={toggleSaved} className="rounded-full p-2 active:bg-white/15" aria-label={t.home.saveCity}>
             <Heart className={cn('h-5 w-5', saved && 'fill-red-500 text-red-500')} />
           </button>
         ) : (
-          <Link href="/citta/" className="rounded-full p-2 active:bg-white/15" aria-label="Aggiungi città">
+          <Link href="/citta/" className="rounded-full p-2 active:bg-white/15" aria-label={t.home.addCity}>
             <Plus className="h-5 w-5" />
           </Link>
         )}

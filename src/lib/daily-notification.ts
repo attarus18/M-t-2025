@@ -7,6 +7,8 @@ import type { SavedCity } from './location';
 import { ALL_PACKS_PRODUCT, getPack } from './packs';
 import { KEYS, getStored, setStored } from './storage';
 import { dailySummary, fetchForecast } from './weather';
+import { temp } from './units';
+import { currentUnits, msg } from '@/i18n/current';
 
 /**
  * Notifica giornaliera con il meteo del giorno, raccontato dall'animale scelto.
@@ -90,18 +92,19 @@ function message(day: Day, city: string) {
   const item = day.representative;
   const condition = pickCondition({ weather: item.weather[0], temp: item.main.temp, windMs: item.wind.speed, gustMs: item.wind.gust });
   const info = CONDITION_INFO[condition];
-  const rain = day.pop >= 0.3 ? ` · pioggia ${Math.round(day.pop * 100)}%` : '';
+  const rain = day.pop >= 0.3 ? ` · ${msg().notification.rain(Math.round(day.pop * 100))}` : '';
+  const units = currentUnits();
   return {
-    title: `${info.emoji} ${city}: ${info.label}, ${Math.round(day.min)}°/${Math.round(day.max)}°${rain}`,
+    title: `${info.emoji} ${city}: ${info.label}, ${temp(day.min, units)}°/${temp(day.max, units)}°${rain}`,
     body: `${animal.emoji} ${animal.name}: «${pickPhrase(animal, condition, `notifica-${day.date}`)}»`,
   };
 }
 
 /** Manda subito la notifica di oggi, per vedere com'e'. Ritorna un messaggio d'errore o null. */
 export async function sendTestNotification(): Promise<string | null> {
-  if (!Capacitor.isNativePlatform()) return "Disponibile nell'app per Android.";
+  if (!Capacitor.isNativePlatform()) return msg().common.androidOnly;
   const position = targetPosition();
-  if (!position) return 'Apri prima il meteo della tua posizione.';
+  if (!position) return msg().notification.openWeatherFirst;
   try {
     const { LocalNotifications } = await import('@capacitor/local-notifications');
     const forecast = await fetchForecast(position.lat, position.lon);
@@ -113,7 +116,7 @@ export async function sendTestNotification(): Promise<string | null> {
     });
     return null;
   } catch {
-    return 'Prova non riuscita: controlla la connessione.';
+    return msg().notification.testFailed;
   }
 }
 

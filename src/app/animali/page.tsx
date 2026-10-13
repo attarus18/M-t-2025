@@ -6,6 +6,7 @@ import { Check, Lock, ShoppingBag, X } from 'lucide-react';
 import { AnimalArt } from '@/components/animal-art';
 import { BuyButton } from '@/components/buy-button';
 import { usePurchases } from '@/context/purchases-context';
+import { useI18n } from '@/i18n';
 import { ANIMALS, comingSoonAnimals, type Animal } from '@/lib/animals';
 import { CONDITIONS, CONDITION_INFO } from '@/lib/conditions';
 import { PACKS, getPack } from '@/lib/packs';
@@ -16,12 +17,13 @@ export default function AnimalsPage() {
   const { animal: current, setAnimal } = useAnimal();
   const { isAnimalUnlocked, isPackUnlocked, hasEveryPack } = usePurchases();
   const [preview, setPreview] = useState<Animal | null>(null);
+  const { t } = useI18n();
 
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="font-fun text-3xl font-bold drop-shadow">Scegli il tuo meteorologo</h1>
-        <p className="text-sm font-semibold opacity-85">Chi ti racconta il meteo oggi?</p>
+        <h1 className="font-fun text-3xl font-bold drop-shadow">{t.animals.title}</h1>
+        <p className="text-sm font-semibold opacity-85">{t.animals.subtitle}</p>
       </header>
 
       {PACKS.map(pack => {
@@ -37,12 +39,12 @@ export default function AnimalsPage() {
                 <p className="text-xs font-semibold opacity-80">{pack.tagline}</p>
               </div>
               {pack.productId === null ? (
-                <Badge className="bg-emerald-400/90 text-emerald-950">Gratis</Badge>
+                <Badge className="bg-emerald-400/90 text-emerald-950">{t.animals.free}</Badge>
               ) : unlocked ? (
-                <Badge className="bg-white/90 text-sky-700">Sbloccato</Badge>
+                <Badge className="bg-white/90 text-sky-700">{t.animals.unlocked}</Badge>
               ) : (
                 <Badge className="bg-amber-400 text-amber-950">
-                  <Lock className="h-3 w-3" strokeWidth={3} /> Da sbloccare
+                  <Lock className="h-3 w-3" strokeWidth={3} /> {t.animals.toUnlock}
                 </Badge>
               )}
             </div>
@@ -89,13 +91,13 @@ export default function AnimalsPage() {
                 >
                   <span className="text-4xl">{soon.emoji}</span>
                   <span className="font-fun font-bold">{soon.name}</span>
-                  <span className="text-[10px] font-bold uppercase tracking-wider">In arrivo</span>
+                  <span className="text-[10px] font-bold uppercase tracking-wider">{t.animals.comingSoon}</span>
                 </div>
               ))}
             </div>
 
             {!unlocked && pack.productId && (
-              <BuyButton productId={pack.productId} label={`Sblocca ${pack.name}`} />
+              <BuyButton productId={pack.productId} label={t.animals.unlockPack(pack.name)} />
             )}
           </section>
         );
@@ -106,7 +108,7 @@ export default function AnimalsPage() {
           href="/premium/"
           className="flex items-center justify-center gap-2 rounded-full bg-white py-4 font-fun text-lg font-bold text-sky-700 shadow-lg active:scale-95"
         >
-          <ShoppingBag className="h-5 w-5" /> Tutti i pacchetti a prezzo scontato
+          <ShoppingBag className="h-5 w-5" /> {t.animals.allPacksDiscount}
         </Link>
       )}
 
@@ -126,13 +128,13 @@ export default function AnimalsPage() {
             <button
               onClick={() => setPreview(null)}
               className="absolute right-4 top-4 rounded-full bg-black/20 p-2"
-              aria-label="Chiudi"
+              aria-label={t.common.close}
             >
               <X className="h-5 w-5" />
             </button>
             <h3 className="font-fun text-2xl font-bold">{preview.name}</h3>
             <p className="text-sm font-semibold opacity-85">
-              Pacchetto {getPack(preview.pack).emoji} {getPack(preview.pack).name}
+              {t.animals.packLabel(`${getPack(preview.pack).emoji} ${getPack(preview.pack).name}`)}
             </p>
             <div className="no-scrollbar mt-4 flex gap-2 overflow-x-auto pb-2">
               {CONDITIONS.map(c => (
@@ -149,7 +151,7 @@ export default function AnimalsPage() {
               {getPack(preview.pack).productId && (
                 <BuyButton
                   productId={getPack(preview.pack).productId!}
-                  label={`Sblocca ${getPack(preview.pack).name}`}
+                  label={t.animals.unlockPack(getPack(preview.pack).name)}
                   onBought={() => {
                     setAnimal(preview.id);
                     setPreview(null);
@@ -161,7 +163,7 @@ export default function AnimalsPage() {
                 className="block text-center text-sm font-bold underline"
                 onClick={() => setPreview(null)}
               >
-                Oppure sblocca tutti i pacchetti
+                {t.animals.orUnlockAll}
               </Link>
             </div>
           </div>

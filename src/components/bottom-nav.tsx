@@ -3,17 +3,19 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { CloudSun, MapPin, PawPrint, Settings } from 'lucide-react';
+import { useI18n } from '@/i18n';
 import { cn } from '@/lib/utils';
 
 const ITEMS = [
-  { href: '/', icon: CloudSun, label: 'Meteo' },
-  { href: '/citta/', icon: MapPin, label: 'Città' },
-  { href: '/animali/', icon: PawPrint, label: 'Animali' },
-  { href: '/impostazioni/', icon: Settings, label: 'Altro' },
-];
+  { href: '/', icon: CloudSun, key: 'weather' },
+  { href: '/citta/', icon: MapPin, key: 'cities' },
+  { href: '/animali/', icon: PawPrint, key: 'animals' },
+  { href: '/impostazioni/', icon: Settings, key: 'more' },
+] as const;
 
 export function BottomNav() {
   const pathname = usePathname();
+  const { t } = useI18n();
   const normalized = pathname.endsWith('/') ? pathname : pathname + '/';
 
   return (
@@ -35,7 +37,7 @@ export function BottomNav() {
               )}
             >
               <item.icon className="h-5 w-5" />
-              {item.label}
+              {t.nav[item.key]}
             </Link>
           );
         })}

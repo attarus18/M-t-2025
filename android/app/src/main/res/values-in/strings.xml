@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!-- Testi del widget (in). Vedi values/strings.xml. -->
+<resources>
+    <string name="widget_description">Cuaca di daerahmu diceritakan oleh hewanmu</string>
+    <string name="widget_small_description">Hewanmu dan suhu, dalam ruang kecil</string>
+    <string name="widget_square_description">Hewanmu dengan suhu tertinggi dan terendah</string>
+    <string name="widget_animal_description">Hewanmu berpakaian sesuai cuaca hari ini</string>
+    <string name="widget_open_app">Buka aplikasi untuk melihat cuaca di daerahmu.</string>
+    <string name="widget_open_app_short">Buka aplikasi</string>
+    <string name="widget_label_small">Meteo Zoo mini</string>
+    <string name="widget_label_square">Meteo Zoo persegi</string>
+</resources>

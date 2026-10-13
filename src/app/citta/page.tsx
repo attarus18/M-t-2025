@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2, MapPin, Navigation, Search, Trash2 } from 'lucide-react';
+import { useI18n } from '@/i18n';
 import { cityId, useSavedCities } from '@/lib/location';
 import { KEYS, setStored } from '@/lib/storage';
 import { searchCities, WeatherError, type CitySearchResult } from '@/lib/weather';
@@ -14,6 +15,7 @@ export default function CitiesPage() {
   const [results, setResults] = useState<CitySearchResult[]>([]);
   const [searching, setSearching] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const { t } = useI18n();
 
   // Ricerca con un piccolo ritardo, per non chiamare l'API a ogni lettera.
   useEffect(() => {
@@ -29,15 +31,17 @@ export default function CitiesPage() {
       try {
         const found = await searchCities(q);
         setResults(found);
-        setMessage(found.length ? null : 'Nessuna città trovata.');
+        setMessage(found.length ? null : t.cities.noneFound);
       } catch (e) {
         setResults([]);
-        setMessage(e instanceof WeatherError ? e.message : 'Ricerca non riuscita.');
+        setMessage(e instanceof WeatherError ? e.message : t.cities.searchFailed);
       } finally {
         setSearching(false);
       }
     }, 400);
     return () => clearTimeout(timer);
+    // t non cambia finche' la pagina e' aperta (un cambio di lingua la ricrea)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
 
   const open = (id: string) => {
@@ -53,14 +57,14 @@ export default function CitiesPage() {
 
   return (
     <div className="space-y-5">
-      <h1 className="font-fun text-3xl font-bold drop-shadow">Città</h1>
+      <h1 className="font-fun text-3xl font-bold drop-shadow">{t.cities.title}</h1>
 
       <div className="glass flex items-center gap-2 rounded-2xl px-4">
         <Search className="h-5 w-5 opacity-70" />
         <input
           value={query}
           onChange={e => setQuery(e.target.value)}
-          placeholder="Cerca una città..."
+          placeholder={t.cities.searchPlaceholder}
           className="h-12 flex-1 bg-transparent font-semibold placeholder:text-white/60 focus:outline-none"
           autoComplete="off"
           enterKeyHint="search"
@@ -88,13 +92,13 @@ export default function CitiesPage() {
       )}
 
       <section className="space-y-2">
-        <h2 className="text-[11px] font-bold uppercase tracking-widest opacity-75">Le tue città</h2>
+        <h2 className="text-[11px] font-bold uppercase tracking-widest opacity-75">{t.cities.yourCities}</h2>
         <button
           onClick={() => open('gps')}
           className="glass flex w-full items-center gap-3 rounded-2xl px-4 py-3.5 text-left active:scale-[0.98]"
         >
           <Navigation className="h-4 w-4 fill-current" />
-          <span className="font-bold">Posizione attuale</span>
+          <span className="font-bold">{t.home.currentLocation}</span>
         </button>
         {cities.map(c => (
           <div key={c.id} className="glass flex items-center gap-3 rounded-2xl px-4 py-1.5">
@@ -103,14 +107,14 @@ export default function CitiesPage() {
               <span className="font-bold">{c.name}</span>
               <span className="text-xs opacity-60">{c.country}</span>
             </button>
-            <button onClick={() => remove(c.id)} className="rounded-full p-2 active:bg-white/15" aria-label={`Rimuovi ${c.name}`}>
+            <button onClick={() => remove(c.id)} className="rounded-full p-2 active:bg-white/15" aria-label={t.cities.remove(c.name)}>
               <Trash2 className="h-4 w-4 opacity-80" />
             </button>
           </div>
         ))}
         {cities.length === 0 && (
           <p className="px-1 text-sm opacity-75">
-            Cerca una città per aggiungerla: poi scorri a destra e sinistra nella schermata Meteo.
+            {t.cities.emptyHint}
           </p>
         )}
       </section>
