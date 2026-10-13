@@ -9,4 +9,10 @@
     <string name="widget_open_app_short">Buka aplikasi</string>
     <string name="widget_label_small">Meteo Zoo mini</string>
     <string name="widget_label_square">Meteo Zoo persegi</string>
+    <string name="widget_label_clear">Meteo Zoo transparan</string>
+    <string name="widget_label_small_clear">Meteo Zoo mini transparan</string>
+    <string name="widget_label_square_clear">Meteo Zoo persegi transparan</string>
+    <string name="widget_clear_description">Hewanmu, cuaca, dan kalimat harian, tanpa latar</string>
+    <string name="widget_small_clear_description">Hewanmu dan suhu, tanpa latar</string>
+    <string name="widget_square_clear_description">Hewanmu dengan suhu tertinggi dan terendah, tanpa latar</string>
 </resources>

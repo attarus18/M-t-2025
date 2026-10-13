@@ -9,4 +9,10 @@
     <string name="widget_open_app_short">앱 열기</string>
     <string name="widget_label_small">Meteo Zoo 미니</string>
     <string name="widget_label_square">Meteo Zoo 정사각형</string>
+    <string name="widget_label_clear">Meteo Zoo 투명</string>
+    <string name="widget_label_small_clear">Meteo Zoo 미니 투명</string>
+    <string name="widget_label_square_clear">Meteo Zoo 정사각형 투명</string>
+    <string name="widget_clear_description">동물과 날씨, 오늘의 한마디를 배경 없이</string>
+    <string name="widget_small_clear_description">동물과 기온을 배경 없이</string>
+    <string name="widget_square_clear_description">동물과 기온, 최고·최저 기온을 배경 없이</string>
 </resources>

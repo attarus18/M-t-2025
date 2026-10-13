@@ -13,4 +13,10 @@
     <string name="widget_open_app_short">Open the app</string>
     <string name="widget_label_small">Meteo Zoo mini</string>
     <string name="widget_label_square">Meteo Zoo square</string>
+    <string name="widget_label_clear">Meteo Zoo transparent</string>
+    <string name="widget_label_small_clear">Meteo Zoo mini transparent</string>
+    <string name="widget_label_square_clear">Meteo Zoo square transparent</string>
+    <string name="widget_clear_description">Your animal, the weather and a daily line, with no background</string>
+    <string name="widget_small_clear_description">Your animal and the temperature, with no background</string>
+    <string name="widget_square_clear_description">Your animal with temperature, high and low, with no background</string>
 </resources>

@@ -67,12 +67,15 @@ public class MeteoWidgetProvider extends AppWidgetProvider {
         return !p.contains("cond") || System.currentTimeMillis() - p.getLong("updatedAt", 0) >= MIN_REFRESH_MS;
     }
 
-    /** Ridisegna tutti i widget presenti nella schermata home, nei tre formati. */
+    /** Ridisegna tutti i widget presenti nella schermata home: tre formati, con fondo colorato o trasparenti. */
     static void renderAll(Context context) {
         AppWidgetManager manager = AppWidgetManager.getInstance(context);
         render(context, manager, MeteoWidgetProvider.class, R.layout.meteo_widget);
         render(context, manager, MeteoWidgetSmallProvider.class, R.layout.meteo_widget_small);
         render(context, manager, MeteoWidgetSquareProvider.class, R.layout.meteo_widget_square);
+        render(context, manager, MeteoWidgetClearProvider.class, R.layout.meteo_widget_clear);
+        render(context, manager, MeteoWidgetSmallClearProvider.class, R.layout.meteo_widget_small_clear);
+        render(context, manager, MeteoWidgetSquareClearProvider.class, R.layout.meteo_widget_square_clear);
     }
 
     private static void render(Context context, AppWidgetManager manager, Class<?> provider, int layout) {
@@ -85,8 +88,11 @@ public class MeteoWidgetProvider extends AppWidgetProvider {
     private static RemoteViews build(Context context, int layout) {
         SharedPreferences p = prefs(context);
         RemoteViews v = new RemoteViews(context.getPackageName(), layout);
-        boolean big = layout == R.layout.meteo_widget;
-        boolean square = layout == R.layout.meteo_widget_square;
+        boolean big = layout == R.layout.meteo_widget || layout == R.layout.meteo_widget_clear;
+        boolean square = layout == R.layout.meteo_widget_square || layout == R.layout.meteo_widget_square_clear;
+        // Varianti trasparenti: si vede lo sfondo della schermata home.
+        boolean clear = layout == R.layout.meteo_widget_clear || layout == R.layout.meteo_widget_small_clear
+            || layout == R.layout.meteo_widget_square_clear;
 
         Intent open = new Intent(context, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         v.setOnClickPendingIntent(R.id.widget_root, PendingIntent.getActivity(context, 0, open, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT));
@@ -95,7 +101,7 @@ public class MeteoWidgetProvider extends AppWidgetProvider {
         String cond = p.getString("cond", null);
         if (cond == null) {
             // Ancora nessun meteo: invito ad aprire l'app.
-            v.setInt(R.id.widget_root, "setBackgroundResource", background("sole"));
+            if (!clear) v.setInt(R.id.widget_root, "setBackgroundResource", background("sole"));
             setAnimal(context, v, animal, "sole");
             v.setTextViewText(R.id.widget_city, big || square ? "Meteo Zoo" : p.getString("openAppShort", context.getString(R.string.widget_open_app_short)));
             v.setTextViewText(R.id.widget_temp, "");
@@ -107,7 +113,7 @@ public class MeteoWidgetProvider extends AppWidgetProvider {
             return v;
         }
 
-        v.setInt(R.id.widget_root, "setBackgroundResource", background(cond));
+        if (!clear) v.setInt(R.id.widget_root, "setBackgroundResource", background(cond));
         setAnimal(context, v, animal, cond);
         v.setTextViewText(R.id.widget_city, p.getString("city", ""));
         // Le temperature sono salvate in °C; l'app dice se mostrarle in °F.

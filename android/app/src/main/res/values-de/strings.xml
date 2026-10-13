@@ -9,4 +9,10 @@
     <string name="widget_open_app_short">App öffnen</string>
     <string name="widget_label_small">Meteo Zoo mini</string>
     <string name="widget_label_square">Meteo Zoo quadratisch</string>
+    <string name="widget_label_clear">Meteo Zoo transparent</string>
+    <string name="widget_label_small_clear">Meteo Zoo mini transparent</string>
+    <string name="widget_label_square_clear">Meteo Zoo quadratisch transparent</string>
+    <string name="widget_clear_description">Dein Tier, das Wetter und der Spruch des Tages, ohne Hintergrund</string>
+    <string name="widget_small_clear_description">Dein Tier und die Temperatur, ohne Hintergrund</string>
+    <string name="widget_square_clear_description">Dein Tier mit Temperatur, Höchst- und Tiefstwert, ohne Hintergrund</string>
 </resources>

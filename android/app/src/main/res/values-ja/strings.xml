@@ -9,4 +9,10 @@
     <string name="widget_open_app_short">アプリを開く</string>
     <string name="widget_label_small">Meteo Zoo ミニ</string>
     <string name="widget_label_square">Meteo Zoo スクエア</string>
+    <string name="widget_label_clear">Meteo Zoo 透明</string>
+    <string name="widget_label_small_clear">Meteo Zoo ミニ 透明</string>
+    <string name="widget_label_square_clear">Meteo Zoo スクエア 透明</string>
+    <string name="widget_clear_description">動物と天気、今日のひとことを背景なしで</string>
+    <string name="widget_small_clear_description">動物と気温を背景なしで</string>
+    <string name="widget_square_clear_description">動物と気温、最高・最低気温を背景なしで</string>
 </resources>

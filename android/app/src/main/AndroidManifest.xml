@@ -63,6 +63,40 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/meteo_widget_square_info" />
         </receiver>
+        <!-- Varianti trasparenti dei tre widget (senza fondo).  -->
+        <receiver
+            android:name=".MeteoWidgetClearProvider"
+            android:exported="false"
+            android:label="@string/widget_label_clear">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/meteo_widget_clear_info" />
+        </receiver>
+        <receiver
+            android:name=".MeteoWidgetSmallClearProvider"
+            android:exported="false"
+            android:label="@string/widget_label_small_clear">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/meteo_widget_small_clear_info" />
+        </receiver>
+        <receiver
+            android:name=".MeteoWidgetSquareClearProvider"
+            android:exported="false"
+            android:label="@string/widget_label_square_clear">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/meteo_widget_square_clear_info" />
+        </receiver>
 
 
         <provider
