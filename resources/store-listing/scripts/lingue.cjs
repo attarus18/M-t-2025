@@ -23,52 +23,52 @@ const WX = {
 const L = {
   it: {
     city: 'Roma', geo: [41.9028, 12.4964], desc: ['cielo sereno', 'pioggia leggera', 'nubi sparse'],
-    caps: ['Il meteo raccontato<br>da un pollo con gli occhiali', 'Piove? Il leone<br>ha già l’ombrello', '10 condizioni meteo,<br>una più buffa dell’altra', 'Ogni animale si veste<br>per il tempo che fa', 'Previsioni ora per ora<br>e per 5 giorni', 'Scegli il tuo meteorologo<br>tra 26 animali'],
+    caps: ['Il meteo raccontato<br>da un pollo con gli occhiali', 'Piove? Il leone<br>ha già l’ombrello', '10 condizioni meteo,<br>una più buffa dell’altra', 'Ogni animale si veste<br>per il tempo che fa', 'Previsioni ora per ora<br>e per 5 giorni', 'Scegli il tuo meteorologo<br>tra 31 animali'],
     feat: 'Il meteo raccontato dagli animali',
   },
   en: {
     city: 'New York', geo: [40.7128, -74.006], units: 'imperial', desc: ['clear sky', 'light rain', 'broken clouds'],
-    caps: ['The weather told<br>by a chicken in sunglasses', 'Rain? The lion<br>already has an umbrella', '10 weather scenes,<br>each one funnier', 'Every animal dresses<br>for the weather', 'Hour-by-hour<br>and 5-day forecasts', 'Pick your forecaster<br>from 26 animals'],
+    caps: ['The weather told<br>by a chicken in sunglasses', 'Rain? The lion<br>already has an umbrella', '10 weather scenes,<br>each one funnier', 'Every animal dresses<br>for the weather', 'Hour-by-hour<br>and 5-day forecasts', 'Pick your forecaster<br>from 31 animals'],
     feat: 'The weather told by animals',
   },
   es: {
     city: 'Madrid', geo: [40.4168, -3.7038], desc: ['cielo claro', 'lluvia ligera', 'nubes rotas'],
-    caps: ['El tiempo contado<br>por un pollo con gafas de sol', '¿Llueve? El león<br>ya tiene paraguas', '10 situaciones de tiempo,<br>a cuál más divertida', 'Cada animal se viste<br>según el tiempo', 'Previsión hora a hora<br>y de 5 días', 'Elige a tu meteorólogo<br>entre 26 animales'],
+    caps: ['El tiempo contado<br>por un pollo con gafas de sol', '¿Llueve? El león<br>ya tiene paraguas', '10 situaciones de tiempo,<br>a cuál más divertida', 'Cada animal se viste<br>según el tiempo', 'Previsión hora a hora<br>y de 5 días', 'Elige a tu meteorólogo<br>entre 31 animales'],
     feat: 'El tiempo contado por los animales',
   },
   pt: {
     city: 'São Paulo', geo: [-23.5505, -46.6333], desc: ['céu limpo', 'chuva leve', 'nublado'],
-    caps: ['A previsão contada<br>por um galinho de óculos', 'Chovendo? O leão<br>já tem guarda-chuva', '10 situações de tempo,<br>cada uma mais engraçada', 'Cada bicho se veste<br>de acordo com o tempo', 'Previsão hora a hora<br>e para 5 dias', 'Escolha seu meteorologista<br>entre 26 animais'],
+    caps: ['A previsão contada<br>por um galinho de óculos', 'Chovendo? O leão<br>já tem guarda-chuva', '10 situações de tempo,<br>cada uma mais engraçada', 'Cada bicho se veste<br>de acordo com o tempo', 'Previsão hora a hora<br>e para 5 dias', 'Escolha seu meteorologista<br>entre 31 animais'],
     feat: 'A previsão do tempo contada pelos bichos',
   },
   fr: {
     city: 'Paris', geo: [48.8566, 2.3522], desc: ['ciel dégagé', 'légère pluie', 'nuageux'],
-    caps: ['La météo racontée<br>par un poulet à lunettes', 'Il pleut ? Le lion<br>a déjà son parapluie', '10 situations météo,<br>toutes plus drôles', 'Chaque animal s’habille<br>selon le temps', 'Prévisions heure par heure<br>et sur 5 jours', 'Choisissez votre météorologue<br>parmi 26 animaux'],
+    caps: ['La météo racontée<br>par un poulet à lunettes', 'Il pleut ? Le lion<br>a déjà son parapluie', '10 situations météo,<br>toutes plus drôles', 'Chaque animal s’habille<br>selon le temps', 'Prévisions heure par heure<br>et sur 5 jours', 'Choisissez votre météorologue<br>parmi 31 animaux'],
     feat: 'La météo racontée par les animaux',
   },
   de: {
     city: 'Berlin', geo: [52.52, 13.405], desc: ['Klarer Himmel', 'Leichter Regen', 'Überwiegend bewölkt'],
-    caps: ['Das Wetter, erzählt<br>von einem Huhn mit Sonnenbrille', 'Regen? Der Löwe<br>hat schon einen Schirm', '10 Wetterlagen,<br>eine lustiger als die andere', 'Jedes Tier zieht sich<br>passend zum Wetter an', 'Stündliche Vorhersage<br>und 5 Tage im Voraus', 'Wähle deinen Wetterfrosch<br>aus 26 Tieren'],
+    caps: ['Das Wetter, erzählt<br>von einem Huhn mit Sonnenbrille', 'Regen? Der Löwe<br>hat schon einen Schirm', '10 Wetterlagen,<br>eine lustiger als die andere', 'Jedes Tier zieht sich<br>passend zum Wetter an', 'Stündliche Vorhersage<br>und 5 Tage im Voraus', 'Wähle deinen Wetterfrosch<br>aus 31 Tieren'],
     feat: 'Das Wetter, erzählt von Tieren',
   },
   ja: {
     city: '東京', geo: [35.6762, 139.6503], desc: ['晴天', '小雨', '曇りがち'],
-    caps: ['サングラスのニワトリが<br>天気を教えてくれる', '雨？ライオンは<br>もう傘を持ってる', '10種類のお天気シーン、<br>どれもゆかい', 'どの動物も<br>天気に合わせてお着がえ', '1時間ごとの予報と<br>5日間の予報', '26匹の中から<br>お天気キャスターを選ぼう'],
+    caps: ['サングラスのニワトリが<br>天気を教えてくれる', '雨？ライオンは<br>もう傘を持ってる', '10種類のお天気シーン、<br>どれもゆかい', 'どの動物も<br>天気に合わせてお着がえ', '1時間ごとの予報と<br>5日間の予報', '31匹の中から<br>お天気キャスターを選ぼう'],
     feat: '動物たちが教えてくれる<br>天気予報',
   },
   ko: {
     city: '서울', geo: [37.5665, 126.978], desc: ['맑음', '약한 비', '구름 많음'],
-    caps: ['선글라스 낀 닭이<br>알려주는 날씨', '비 온다고? 사자는<br>벌써 우산을 챙겼어요', '10가지 날씨 장면,<br>하나하나 재미있게', '동물마다 날씨에 맞게<br>옷을 갈아입어요', '시간별 예보와<br>5일 예보', '26마리 동물 중에서<br>기상캐스터를 골라요'],
+    caps: ['선글라스 낀 닭이<br>알려주는 날씨', '비 온다고? 사자는<br>벌써 우산을 챙겼어요', '10가지 날씨 장면,<br>하나하나 재미있게', '동물마다 날씨에 맞게<br>옷을 갈아입어요', '시간별 예보와<br>5일 예보', '31마리 동물 중에서<br>기상캐스터를 골라요'],
     feat: '동물들이 알려주는 날씨',
   },
   id: {
     city: 'Jakarta', geo: [-6.2088, 106.8456], desc: ['langit cerah', 'hujan ringan', 'berawan'],
-    caps: ['Cuaca diceritakan oleh<br>ayam berkacamata hitam', 'Hujan? Singa<br>sudah bawa payung', '10 suasana cuaca,<br>satu lebih lucu dari lainnya', 'Setiap hewan berpakaian<br>sesuai cuaca', 'Prakiraan per jam<br>dan 5 hari', 'Pilih peramal cuacamu<br>dari 26 hewan'],
+    caps: ['Cuaca diceritakan oleh<br>ayam berkacamata hitam', 'Hujan? Singa<br>sudah bawa payung', '10 suasana cuaca,<br>satu lebih lucu dari lainnya', 'Setiap hewan berpakaian<br>sesuai cuaca', 'Prakiraan per jam<br>dan 5 hari', 'Pilih peramal cuacamu<br>dari 31 hewan'],
     feat: 'Cuaca diceritakan oleh hewan',
   },
   tr: {
     city: 'İstanbul', geo: [41.0082, 28.9784], desc: ['açık', 'hafif yağmur', 'parçalı bulutlu'],
-    caps: ['Güneş gözlüklü bir tavuğun<br>anlattığı hava durumu', 'Yağmur mu? Aslanın<br>şemsiyesi hazır', '10 hava durumu sahnesi,<br>biri diğerinden komik', 'Her hayvan havaya<br>göre giyinir', 'Saatlik ve<br>5 günlük tahmin', '26 hayvan arasından<br>sunucunu seç'],
+    caps: ['Güneş gözlüklü bir tavuğun<br>anlattığı hava durumu', 'Yağmur mu? Aslanın<br>şemsiyesi hazır', '10 hava durumu sahnesi,<br>biri diğerinden komik', 'Her hayvan havaya<br>göre giyinir', 'Saatlik ve<br>5 günlük tahmin', '31 hayvan arasından<br>sunucunu seç'],
     feat: 'Hayvanların anlattığı hava durumu',
   },
 };
