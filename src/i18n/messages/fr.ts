@@ -32,6 +32,7 @@ const fr: Messages = {
     bosco: { name: 'Forêt et Mare', tagline: 'Des prévisions entre les feuilles' },
     casa: { name: 'Amis de la maison', tagline: 'La météo depuis le canapé' },
     esotici: { name: 'Exotiques', tagline: 'La météo du bout du monde' },
+    deserto: { name: 'Désert et Oasis', tagline: 'Prévisions sous un soleil brûlant' },
   },
   home: {
     currentLocation: 'Position actuelle',

@@ -32,6 +32,7 @@ const ja: Messages = {
     bosco: { name: '森と池', tagline: '葉っぱの間から天気予報' },
     casa: { name: 'おうちの友だち', tagline: 'ソファから天気予報' },
     esotici: { name: 'エキゾチック', tagline: '世界中から天気予報' },
+    deserto: { name: '砂漠とオアシス', tagline: '灼熱の太陽の下から天気予報' },
   },
   home: {
     currentLocation: '現在地',

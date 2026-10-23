@@ -32,6 +32,7 @@ const tr: Messages = {
     bosco: { name: 'Orman ve Gölet', tagline: 'Yaprakların arasından tahminler' },
     casa: { name: 'Ev Dostları', tagline: 'Kanepeden hava durumu' },
     esotici: { name: 'Egzotik', tagline: 'Dünyanın dört bir yanından hava durumu' },
+    deserto: { name: 'Çöl ve Vaha', tagline: 'Kavurucu güneşin altından tahminler' },
   },
   home: {
     currentLocation: 'Mevcut konum',

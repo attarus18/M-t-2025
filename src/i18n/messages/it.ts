@@ -35,6 +35,7 @@ const it = {
     bosco: { name: 'Bosco e Stagno', tagline: 'Previsioni tra le foglie' },
     casa: { name: 'Amici di casa', tagline: 'Il meteo dal divano' },
     esotici: { name: 'Esotici', tagline: 'Meteo dal resto del mondo' },
+    deserto: { name: 'Deserto e Oasi', tagline: 'Previsioni sotto il sole cocente' },
   },
   home: {
     currentLocation: 'Posizione attuale',

@@ -6,7 +6,7 @@
  * Gli ID prodotto vanno creati identici in Play Console > Monetizza con Google
  * Play > Prodotti in-app.
  */
-export type PackId = 'base' | 'fattoria' | 'mare' | 'bosco' | 'casa' | 'esotici';
+export type PackId = 'base' | 'fattoria' | 'mare' | 'bosco' | 'casa' | 'esotici' | 'deserto';
 
 export interface Pack {
   id: PackId;
@@ -53,6 +53,13 @@ export const PACKS: Pack[] = [
     emoji: '🌍',
     tagline: 'Meteo dal resto del mondo',
     productId: 'pa_pack_esotici',
+  },
+  {
+    id: 'deserto',
+    name: 'Deserto e Oasi',
+    emoji: '🐪',
+    tagline: 'Previsioni sotto il sole cocente',
+    productId: 'pa_pack_deserto',
   },
 ];
 

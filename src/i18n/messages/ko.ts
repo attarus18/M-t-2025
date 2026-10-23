@@ -38,6 +38,7 @@ const ko: Messages = {
     bosco: { name: '숲과 연못', tagline: '나뭇잎 사이의 예보' },
     casa: { name: '집 친구들', tagline: '소파에서 전하는 날씨' },
     esotici: { name: '이국 동물', tagline: '세계 곳곳에서 전하는 날씨' },
+    deserto: { name: '사막과 오아시스', tagline: '뜨거운 태양 아래서 전하는 날씨' },
   },
   home: {
     currentLocation: '현재 위치',

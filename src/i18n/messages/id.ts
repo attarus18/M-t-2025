@@ -32,6 +32,7 @@ const id: Messages = {
     bosco: { name: 'Hutan & Kolam', tagline: 'Ramalan di antara dedaunan' },
     casa: { name: 'Teman Rumah', tagline: 'Cuaca dari sofa' },
     esotici: { name: 'Eksotis', tagline: 'Cuaca dari seluruh dunia' },
+    deserto: { name: 'Gurun & Oasis', tagline: 'Ramalan di bawah terik matahari' },
   },
   home: {
     currentLocation: 'Lokasi saat ini',
