@@ -30,6 +30,7 @@ const STRICT_SCENES = new Set([
   // pupazzi di neve e nuvole bianche che toccano lo sfondo
   'maiale/neve', 'tartaruga/neve', 'cane/neve', 'coniglio/neve', 'delfino/neve', 'granchio/neve',
   'pappagallo/nuvoloso', 'scimmia/nuvoloso', 'scoiattolo/nuvoloso',
+  'camaleonte/nuvoloso', 'suricato/nuvoloso', 'avvoltoio/nuvoloso', 'cammello/nebbia', 'camaleonte/nebbia',
 ]);
 // I pupazzi di neve sono bianchi come lo sfondo: le scene di neve vanno scontornate delicate,
 // tranne le vecchie JPG con il contorno da adesivo (pupazzo gia' separato, ma piene di rumore).

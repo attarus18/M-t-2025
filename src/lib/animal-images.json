@@ -11,6 +11,42 @@
     "temporale",
     "vento"
   ],
+  "avvoltoio": [
+    "caldo",
+    "freddo",
+    "nebbia",
+    "neve",
+    "notte",
+    "nuvoloso",
+    "pioggia",
+    "sole",
+    "temporale",
+    "vento"
+  ],
+  "camaleonte": [
+    "caldo",
+    "freddo",
+    "nebbia",
+    "neve",
+    "notte",
+    "nuvoloso",
+    "pioggia",
+    "sole",
+    "temporale",
+    "vento"
+  ],
+  "cammello": [
+    "caldo",
+    "freddo",
+    "nebbia",
+    "neve",
+    "notte",
+    "nuvoloso",
+    "pioggia",
+    "sole",
+    "temporale",
+    "vento"
+  ],
   "cane": [
     "caldo",
     "freddo",
@@ -276,6 +312,30 @@
     "vento"
   ],
   "scoiattolo": [
+    "caldo",
+    "freddo",
+    "nebbia",
+    "neve",
+    "notte",
+    "nuvoloso",
+    "pioggia",
+    "sole",
+    "temporale",
+    "vento"
+  ],
+  "struzzo": [
+    "caldo",
+    "freddo",
+    "nebbia",
+    "neve",
+    "notte",
+    "nuvoloso",
+    "pioggia",
+    "sole",
+    "temporale",
+    "vento"
+  ],
+  "suricato": [
     "caldo",
     "freddo",
     "nebbia",
