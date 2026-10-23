@@ -30,7 +30,7 @@ const STRICT_SCENES = new Set([
   // pupazzi di neve e nuvole bianche che toccano lo sfondo
   'maiale/neve', 'tartaruga/neve', 'cane/neve', 'coniglio/neve', 'delfino/neve', 'granchio/neve',
   'pappagallo/nuvoloso', 'scimmia/nuvoloso', 'scoiattolo/nuvoloso',
-  'camaleonte/nuvoloso', 'suricato/nuvoloso', 'avvoltoio/nuvoloso', 'cammello/nebbia', 'camaleonte/nebbia',
+  'camaleonte/nuvoloso', 'suricato/nuvoloso', 'avvoltoio/nuvoloso', 'cammello/nebbia', 'camaleonte/nebbia', 'struzzo/nebbia',
 ]);
 // I pupazzi di neve sono bianchi come lo sfondo: le scene di neve vanno scontornate delicate,
 // tranne le vecchie JPG con il contorno da adesivo (pupazzo gia' separato, ma piene di rumore).
@@ -38,7 +38,7 @@ const SNOW_NORMAL = new Set(['gatto', 'mucca', 'pecora', 'pinguino', 'pollo', 'r
 const isStrict = (animal, name) => STRICT.has(animal) || (name === 'neve' && !SNOW_NORMAL.has(animal)) || STRICT_SCENES.has(`${animal}/${name}`);
 // Scene con un buco di sfondo chiuso dal disegno (es. tra collo e zampa della
 // giraffa): il riempimento dai bordi non ci arriva, si tolgono le zone bianche grandi.
-const HOLE_SCENES = new Set(['giraffa/caldo']);
+const HOLE_SCENES = new Set(['giraffa/caldo', 'struzzo/pioggia']);
 const MIN_HOLE = 1500; // pixel: occhi e riflessi sono piu' piccoli
 // Ombra grigia chiara sotto l'animale (tra le zampe del granchio): con la soglia normale
 // resta una macchia biancastra. Qui e' sfondo anche il grigio chiaro neutro.
