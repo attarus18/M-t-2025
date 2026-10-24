@@ -30,7 +30,7 @@ const STRICT_SCENES = new Set([
   // pupazzi di neve e nuvole bianche che toccano lo sfondo
   'maiale/neve', 'tartaruga/neve', 'cane/neve', 'coniglio/neve', 'delfino/neve', 'granchio/neve',
   'pappagallo/nuvoloso', 'scimmia/nuvoloso', 'scoiattolo/nuvoloso',
-  'camaleonte/nuvoloso', 'suricato/nuvoloso', 'avvoltoio/nuvoloso', 'cammello/nebbia', 'camaleonte/nebbia', 'struzzo/nebbia',
+  'camaleonte/nuvoloso', 'suricato/nuvoloso', 'avvoltoio/nuvoloso', 'cammello/nebbia', 'camaleonte/nebbia', 'struzzo/nebbia', 'cammello/freddo',
 ]);
 // I pupazzi di neve sono bianchi come lo sfondo: le scene di neve vanno scontornate delicate,
 // tranne le vecchie JPG con il contorno da adesivo (pupazzo gia' separato, ma piene di rumore).
@@ -38,11 +38,22 @@ const SNOW_NORMAL = new Set(['gatto', 'mucca', 'pecora', 'pinguino', 'pollo', 'r
 const isStrict = (animal, name) => STRICT.has(animal) || (name === 'neve' && !SNOW_NORMAL.has(animal)) || STRICT_SCENES.has(`${animal}/${name}`);
 // Scene con un buco di sfondo chiuso dal disegno (es. tra collo e zampa della
 // giraffa): il riempimento dai bordi non ci arriva, si tolgono le zone bianche grandi.
-const HOLE_SCENES = new Set(['giraffa/caldo', 'struzzo/pioggia']);
+const HOLE_SCENES = new Set(['giraffa/caldo', 'struzzo/pioggia', 'cammello/neve', 'cammello/vento', 'cammello/sole', 'cammello/caldo', 'cammello/pioggia', 'cammello/notte']);
 const MIN_HOLE = 1500; // pixel: occhi e riflessi sono piu' piccoli
+// Zone (frazioni x0, y0, x1, y1, ed eventuale dimensione minima) in cui cercare i buchi,
+// se la scena ha altro bianco da salvare (il pupazzo di neve accanto al cammello).
+// Una zona stretta permette di togliere anche spiragli piccoli tra le zampe.
+const HOLE_BOX = {
+  'cammello/neve': [[0, 0.6, 0.55, 1]],
+  'cammello/vento': [[0, 0.55, 1, 1]],
+  'cammello/sole': [[0, 0.5, 1, 1]],
+  'cammello/caldo': [[0.2, 0.35, 0.5, 0.65]],
+  'cammello/pioggia': [[0.3, 0.35, 0.6, 0.65], [0.6, 0.7, 0.85, 0.95, 80]],
+  'cammello/notte': [[0.5, 0.75, 0.75, 1, 80]],
+};
 // Ombra grigia chiara sotto l'animale (tra le zampe del granchio): con la soglia normale
 // resta una macchia biancastra. Qui e' sfondo anche il grigio chiaro neutro.
-const SHADOW_SCENES = new Set(['granchio/sole', 'granchio/notte']);
+const SHADOW_SCENES = new Set(['granchio/sole', 'granchio/notte', 'cammello/vento']);
 const isShadow = (d, i) => Math.min(d[i], d[i + 1], d[i + 2]) >= 200 && Math.max(d[i], d[i + 1], d[i + 2]) - Math.min(d[i], d[i + 1], d[i + 2]) <= 24;
 // Nebbia che arriva ai bordi dell'immagine: verrebbe tagliata dritta, la si sfuma.
 const FADE_SCENES = new Set(['leone/nebbia']);
@@ -186,7 +197,7 @@ function cleanEdge(data, width, height, depth) {
   }
 }
 
-function removeWhiteBackground(data, width, height, strict = false, holes = false, edgeDepth = 0, shadow = false) {
+function removeWhiteBackground(data, width, height, strict = false, holes = false, edgeDepth = 0, shadow = false, holeBoxes = [[0, 0, 1, 1]]) {
   const isBg = strict
     ? i => isStrictBg(data, i) && data[i + 3] > 0
     : shadow
@@ -209,7 +220,13 @@ function removeWhiteBackground(data, width, height, strict = false, holes = fals
           todo.push(q);
         }
       }
-      if (region.length >= MIN_HOLE) for (const p of region) data[p * 4 + 3] = 0;
+      let cx = 0, cy = 0;
+      for (const p of region) { cx += p % width; cy += (p / width) | 0; }
+      cx /= region.length * width;
+      cy /= region.length * height;
+      const inBox = holeBoxes.some(([x0, y0, x1, y1, min = MIN_HOLE]) =>
+        region.length >= min && cx >= x0 && cx <= x1 && cy >= y0 && cy <= y1);
+      if (inBox) for (const p of region) data[p * 4 + 3] = 0;
     }
   }
   const seen = new Uint8Array(width * height);
@@ -220,7 +237,8 @@ function removeWhiteBackground(data, width, height, strict = false, holes = fals
     const p = stack.pop();
     if (seen[p]) continue;
     seen[p] = 1;
-    if (!isBg(p * 4)) continue;
+    // I buchi gia' tolti non fermano il riempimento.
+    if (data[p * 4 + 3] !== 0 && !isBg(p * 4)) continue;
     data[p * 4 + 3] = 0;
     const x = p % width;
     const y = (p / width) | 0;
@@ -290,7 +308,7 @@ for (const animal of fs.existsSync(SRC) ? fs.readdirSync(SRC) : []) {
     const { data, info } = await src.ensureAlpha().raw().toBuffer({ resolveWithObject: true });
     if (!alreadyTransparent) {
       const scene = `${animal}/${name}`;
-      removeWhiteBackground(data, info.width, info.height, isStrict(animal, name), HOLE_SCENES.has(scene), small ? 10 : 0, SHADOW_SCENES.has(scene));
+      removeWhiteBackground(data, info.width, info.height, isStrict(animal, name), HOLE_SCENES.has(scene), small ? 10 : 0, SHADOW_SCENES.has(scene), HOLE_BOX[scene]);
       if (SHADOW_SCENES.has(scene)) removeLowShadows(data, info.width, info.height);
       if (FADE_SCENES.has(scene)) {
         fogToAlpha(data, info.width, info.height);
