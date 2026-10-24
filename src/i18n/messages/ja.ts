@@ -33,6 +33,7 @@ const ja: Messages = {
     casa: { name: 'おうちの友だち', tagline: 'ソファから天気予報' },
     esotici: { name: 'エキゾチック', tagline: '世界中から天気予報' },
     deserto: { name: '砂漠とオアシス', tagline: '灼熱の太陽の下から天気予報' },
+    feste: { name: '季節のゲスト', tagline: '無料、ただし期間限定' },
   },
   home: {
     currentLocation: '現在地',
@@ -90,6 +91,7 @@ const ja: Messages = {
     unlocked: '解放済み',
     toUnlock: 'ロック中',
     comingSoon: '近日登場',
+    freeUntil: (date: string) => `${date}まで無料`,
     unlockPack: pack => `${pack}を解放`,
     allPacksDiscount: '全パックをお得な価格で',
     packLabel: pack => `${pack}パック`,

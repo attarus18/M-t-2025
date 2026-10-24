@@ -251,6 +251,18 @@
     "temporale",
     "vento"
   ],
+  "pipistrello": [
+    "caldo",
+    "freddo",
+    "nebbia",
+    "neve",
+    "notte",
+    "nuvoloso",
+    "pioggia",
+    "sole",
+    "temporale",
+    "vento"
+  ],
   "pollo": [
     "caldo",
     "freddo",

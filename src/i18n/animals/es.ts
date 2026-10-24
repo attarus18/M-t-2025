@@ -818,6 +818,22 @@ const es: AnimalTexts = {
       freddo: ['Helada: plumas infladas y patas bajo la manta.', 'Bajo cero: esta mañana no hay carrera.'],
     },
   },
+  pipistrello: {
+    name: 'Murciélago',
+    tagline: '¿Truco o pronóstico?',
+    phrases: {
+      sole: ['¿Sol? Gafas oscuras y a pedir truco o trato.', 'Buen tiempo: la calabaza está llena y el cielo despejado.'],
+      notte: ['Noche: ¡por fin mi turno! Boca abajo y con la calabaza encendida.', 'Cielo estrellado: esta noche vuelo de puerta en puerta.'],
+      nuvoloso: ['Nublado: ambiente perfecto de Halloween.', 'Cielo gris: ideal para un murciélago tímido.'],
+      pioggia: ['Llueve: paraguas naranja y caramelos secos.', 'Lluvia: botas negras y charcos embrujados.'],
+      temporale: ['¡Tormenta! Me escondo bajo la manta con los caramelos.', 'Truenos y relámpagos: esto sí da miedo.'],
+      neve: ['Nieve: ¡hice un muñeco con cabeza de calabaza!', 'Nieva: guantes naranjas y alas calentitas.'],
+      nebbia: ['Niebla: hay un fantasmita, pero es simpático.', 'No veo nada: menos mal que llevo la calabaza encendida.'],
+      vento: ['Viento fuerte: sujeto el sombrero, ¡los caramelos vuelan!', 'Ráfagas: hoy vuelo sin batir las alas.'],
+      caldo: ['Calor sofocante: piscina de calabaza y polo helado.', 'Demasiado calor para la capa: hoy sin bufanda.'],
+      freddo: ['Helada: manta, chocolate caliente y una nube.', 'Bajo cero: las alas bien cerradas.'],
+    },
+  },
 };
 
 export default es;

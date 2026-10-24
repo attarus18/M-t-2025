@@ -818,6 +818,22 @@ const id: AnimalTexts = {
       freddo: ['Membeku: bulu mengembang dan kaki di bawah selimut.', 'Di bawah nol: pagi ini tidak lari.'],
     },
   },
+  pipistrello: {
+    name: 'Kelelawar',
+    tagline: 'Permen atau ramalan?',
+    phrases: {
+      sole: ['Cerah? Pakai kacamata hitam dan ayo minta permen!', 'Cuaca bagus: labu penuh, langit pun cerah.'],
+      notte: ['Malam: akhirnya giliranku! Terbalik dengan labu menyala.', 'Langit berbintang: malam ini aku terbang dari pintu ke pintu.'],
+      nuvoloso: ['Berawan: suasana Halloween yang pas.', 'Langit kelabu: cocok untuk kelelawar pemalu.'],
+      pioggia: ['Hujan: payung oranye dan permen tetap kering.', 'Hujan: sepatu bot hitam dan genangan seram.'],
+      temporale: ['Badai petir! Sembunyi di bawah selimut bersama permen.', 'Guntur dan kilat: ini baru menakutkan.'],
+      neve: ['Salju: aku bikin boneka salju berkepala labu!', 'Turun salju: sarung tangan oranye dan sayap hangat.'],
+      nebbia: ['Kabut: ada hantu kecil, tapi dia ramah.', 'Tidak kelihatan apa-apa: untung labuku menyala.'],
+      vento: ['Angin kencang: pegang topi, permennya terbang!', 'Hembusan angin: hari ini terbang tanpa mengepak.'],
+      caldo: ['Panas terik: kolam labu dan es loli.', 'Terlalu panas untuk jubah: hari ini tanpa syal.'],
+      freddo: ['Beku: selimut, cokelat panas, dan marshmallow.', 'Di bawah nol: sayap terlipat rapat.'],
+    },
+  },
 };
 
 export default id;

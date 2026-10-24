@@ -33,6 +33,7 @@ const id: Messages = {
     casa: { name: 'Teman Rumah', tagline: 'Cuaca dari sofa' },
     esotici: { name: 'Eksotis', tagline: 'Cuaca dari seluruh dunia' },
     deserto: { name: 'Gurun & Oasis', tagline: 'Ramalan di bawah terik matahari' },
+    feste: { name: 'Tamu hari raya', tagline: 'Gratis, tapi hanya beberapa hari' },
   },
   home: {
     currentLocation: 'Lokasi saat ini',
@@ -90,6 +91,7 @@ const id: Messages = {
     unlocked: 'Terbuka',
     toUnlock: 'Terkunci',
     comingSoon: 'Segera hadir',
+    freeUntil: (date: string) => `Gratis sampai ${date}`,
     unlockPack: pack => `Buka ${pack}`,
     allPacksDiscount: 'Semua paket dengan harga diskon',
     packLabel: pack => `Paket ${pack}`,

@@ -6,7 +6,7 @@
  * Gli ID prodotto vanno creati identici in Play Console > Monetizza con Google
  * Play > Prodotti in-app.
  */
-export type PackId = 'base' | 'fattoria' | 'mare' | 'bosco' | 'casa' | 'esotici' | 'deserto';
+export type PackId = 'base' | 'feste' | 'fattoria' | 'mare' | 'bosco' | 'casa' | 'esotici' | 'deserto';
 
 export interface Pack {
   id: PackId;
@@ -19,6 +19,8 @@ export interface Pack {
 
 export const PACKS: Pack[] = [
   { id: 'base', name: 'Base', emoji: '🏠', tagline: 'Gratis per tutti', productId: null },
+  // Animali delle feste: gratis, ma visibili solo nel loro periodo (Animal.season).
+  { id: 'feste', name: 'Ospiti delle feste', emoji: '🎉', tagline: 'Gratis, ma solo per pochi giorni', productId: null },
   {
     id: 'fattoria',
     name: 'Fattoria',

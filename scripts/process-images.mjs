@@ -30,7 +30,7 @@ const STRICT_SCENES = new Set([
   // pupazzi di neve e nuvole bianche che toccano lo sfondo
   'maiale/neve', 'tartaruga/neve', 'cane/neve', 'coniglio/neve', 'delfino/neve', 'granchio/neve',
   'pappagallo/nuvoloso', 'scimmia/nuvoloso', 'scoiattolo/nuvoloso',
-  'camaleonte/nuvoloso', 'suricato/nuvoloso', 'avvoltoio/nuvoloso', 'cammello/nebbia', 'camaleonte/nebbia', 'struzzo/nebbia', 'cammello/freddo',
+  'camaleonte/nuvoloso', 'suricato/nuvoloso', 'avvoltoio/nuvoloso', 'cammello/nebbia', 'camaleonte/nebbia', 'struzzo/nebbia', 'cammello/freddo', 'pipistrello/nebbia',
 ]);
 // I pupazzi di neve sono bianchi come lo sfondo: le scene di neve vanno scontornate delicate,
 // tranne le vecchie JPG con il contorno da adesivo (pupazzo gia' separato, ma piene di rumore).
@@ -38,7 +38,7 @@ const SNOW_NORMAL = new Set(['gatto', 'mucca', 'pecora', 'pinguino', 'pollo', 'r
 const isStrict = (animal, name) => STRICT.has(animal) || (name === 'neve' && !SNOW_NORMAL.has(animal)) || STRICT_SCENES.has(`${animal}/${name}`);
 // Scene con un buco di sfondo chiuso dal disegno (es. tra collo e zampa della
 // giraffa): il riempimento dai bordi non ci arriva, si tolgono le zone bianche grandi.
-const HOLE_SCENES = new Set(['giraffa/caldo', 'struzzo/pioggia', 'cammello/neve', 'cammello/vento', 'cammello/sole', 'cammello/caldo', 'cammello/pioggia', 'cammello/notte', 'pollo/freddo', 'pollo/neve', 'pollo/notte', 'pollo/sole', 'pollo/vento', 'gatto/sole', 'gatto/nebbia', 'gatto/caldo']);
+const HOLE_SCENES = new Set(['giraffa/caldo', 'struzzo/pioggia', 'cammello/neve', 'cammello/vento', 'cammello/sole', 'cammello/caldo', 'cammello/pioggia', 'cammello/notte', 'pollo/freddo', 'pollo/neve', 'pollo/notte', 'pollo/sole', 'pollo/vento', 'gatto/sole', 'gatto/nebbia', 'gatto/caldo', 'pipistrello/pioggia']);
 const MIN_HOLE = 1500; // pixel: occhi e riflessi sono piu' piccoli
 // Vecchie JPG a 200px: il bianco tra le zampe e' rumoroso e la soglia stretta lo spezza in
 // frammenti. Qui i buchi si cercano con la soglia normale, solo se piccoli (non la pancia).
@@ -89,6 +89,7 @@ const HOLE_BOX = {
   'pollo/sole': [[0.3, 0.75, 0.7, 1, 80]],
   'pollo/vento': [[0.2, 0.75, 0.7, 1, 80]],
   'gatto/sole': [[0.1, 0.5, 0.28, 0.85, 80]],
+  'pipistrello/pioggia': [[0.28, 0.2, 0.42, 0.48, 80]],
   'gatto/nebbia': [[0.45, 0.7, 0.6, 0.95, 80]],
   'gatto/caldo': [[0.27, 0.28, 0.36, 0.48, 80]],
 };

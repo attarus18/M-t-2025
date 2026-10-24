@@ -33,6 +33,7 @@ const en: Messages = {
     casa: { name: 'House Friends', tagline: 'Weather from the sofa' },
     esotici: { name: 'Exotic', tagline: 'Weather from around the world' },
     deserto: { name: 'Desert & Oasis', tagline: 'Forecasts under the blazing sun' },
+    feste: { name: 'Holiday guests', tagline: 'Free, but only for a few days' },
   },
   home: {
     currentLocation: 'Current location',
@@ -90,6 +91,7 @@ const en: Messages = {
     unlocked: 'Unlocked',
     toUnlock: 'Locked',
     comingSoon: 'Coming soon',
+    freeUntil: (date: string) => `Free until ${date}`,
     unlockPack: pack => `Unlock ${pack}`,
     allPacksDiscount: 'All packs at a discount',
     packLabel: pack => `${pack} pack`,

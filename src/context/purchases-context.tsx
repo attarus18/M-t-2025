@@ -2,7 +2,7 @@
 
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { Capacitor } from '@capacitor/core';
-import type { Animal } from '@/lib/animals';
+import { isInSeason, type Animal } from '@/lib/animals';
 import { ALL_PACKS_PRODUCT, PACKS, PAID_PRODUCT_IDS, getPack, type PackId } from '@/lib/packs';
 import { KEYS, getStored, setStored } from '@/lib/storage';
 
@@ -153,7 +153,7 @@ export function PurchasesProvider({ children }: { children: ReactNode }) {
       hasAll,
       hasEveryPack: PACKS.every(p => isPackUnlocked(p.id)),
       isPackUnlocked,
-      isAnimalUnlocked: animal => isPackUnlocked(animal.pack),
+      isAnimalUnlocked: animal => isInSeason(animal) && isPackUnlocked(animal.pack),
       prices,
       purchase,
       restore,

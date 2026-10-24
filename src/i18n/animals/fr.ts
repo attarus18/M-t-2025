@@ -818,6 +818,22 @@ const fr: AnimalTexts = {
       freddo: ['Gel : plumes gonflées et pattes sous la couverture.', 'En dessous de zéro : pas de course ce matin.'],
     },
   },
+  pipistrello: {
+    name: 'Chauve-souris',
+    tagline: 'Un bonbon ou une prévision ?',
+    phrases: {
+      sole: ['Soleil ? Lunettes noires et en route pour des bonbons !', 'Beau temps : la citrouille est pleine et le ciel dégagé.'],
+      notte: ['La nuit : enfin mon tour ! Tête en bas et citrouille allumée.', 'Ciel étoilé : ce soir je vole de porte en porte.'],
+      nuvoloso: ['Nuageux : ambiance parfaite pour Halloween.', 'Ciel gris : idéal pour une chauve-souris timide.'],
+      pioggia: ['Il pleut : parapluie orange et bonbons au sec.', 'Pluie : bottes noires et flaques ensorcelées.'],
+      temporale: ['Orage ! Je me cache sous la couverture avec mes bonbons.', 'Tonnerre et éclairs : ça, ça fait peur.'],
+      neve: ['Neige : j\'ai fait un bonhomme à tête de citrouille !', 'Il neige : moufles orange et ailes au chaud.'],
+      nebbia: ['Brouillard : il y a un petit fantôme, mais il est gentil.', 'Je ne vois rien : heureusement ma citrouille est allumée.'],
+      vento: ['Vent fort : je tiens mon chapeau, les bonbons s\'envolent !', 'Rafales : aujourd\'hui je vole sans battre des ailes.'],
+      caldo: ['Canicule : piscine citrouille et glace à l\'eau.', 'Trop chaud pour la cape : pas d\'écharpe aujourd\'hui.'],
+      freddo: ['Gel : couverture, chocolat chaud et un marshmallow.', 'Sous zéro : ailes bien repliées.'],
+    },
+  },
 };
 
 export default fr;

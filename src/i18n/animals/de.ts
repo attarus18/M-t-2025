@@ -818,6 +818,22 @@ const de: AnimalTexts = {
       freddo: ['Frost: Aufgeplusterte Federn und Füße unter der Decke.', 'Unter null: Heute Morgen kein Rennen.'],
     },
   },
+  pipistrello: {
+    name: 'Fledermaus',
+    tagline: 'Süßes oder Vorhersage?',
+    phrases: {
+      sole: ['Sonne? Sonnenbrille auf und los zu Süßes oder Saures!', 'Schönes Wetter: Der Kürbis ist voll, der Himmel klar.'],
+      notte: ['Nacht: endlich meine Schicht! Kopfüber mit leuchtendem Kürbis.', 'Sternenhimmel: Heute fliege ich von Tür zu Tür.'],
+      nuvoloso: ['Bewölkt: perfekte Halloween-Stimmung.', 'Grauer Himmel: ideal für eine schüchterne Fledermaus.'],
+      pioggia: ['Regen: oranger Schirm und trockene Bonbons.', 'Regen: schwarze Stiefel und gruselige Pfützen.'],
+      temporale: ['Gewitter! Ich verstecke mich mit den Bonbons unter der Decke.', 'Donner und Blitz: DAS ist gruselig.'],
+      neve: ['Schnee: Ich habe einen Schneemann mit Kürbiskopf gebaut!', 'Es schneit: orange Handschuhe und warme Flügel.'],
+      nebbia: ['Nebel: Da ist ein kleines Gespenst, aber es ist nett.', 'Ich sehe nichts: Zum Glück leuchtet mein Kürbis.'],
+      vento: ['Starker Wind: Ich halte den Hut, die Bonbons fliegen!', 'Böen: Heute fliege ich ohne Flügelschlag.'],
+      caldo: ['Brütende Hitze: Kürbis-Pool und Eis am Stiel.', 'Zu heiß für den Umhang: heute kein Schal.'],
+      freddo: ['Frost: Decke, heißer Kakao und ein Marshmallow.', 'Unter null: Flügel fest eingewickelt.'],
+    },
+  },
 };
 
 export default de;

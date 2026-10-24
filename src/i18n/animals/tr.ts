@@ -818,6 +818,22 @@ const tr: AnimalTexts = {
       freddo: ['Ayaz: kabarık tüyler ve battaniyenin altında ayaklar.', 'Sıfırın altı: bu sabah koşu yok.'],
     },
   },
+  pipistrello: {
+    name: 'Yarasa',
+    tagline: 'Şeker mi, tahmin mi?',
+    phrases: {
+      sole: ['Güneş mi? Güneş gözlüğünü tak, şeker toplamaya!', 'Güzel hava: balkabağı dolu, gökyüzü açık.'],
+      notte: ['Gece: nihayet benim vardiyam! Baş aşağı, balkabağı yanıyor.', 'Yıldızlı gök: bu gece kapı kapı uçuyorum.'],
+      nuvoloso: ['Bulutlu: tam Cadılar Bayramı havası.', 'Gri gökyüzü: utangaç bir yarasa için ideal.'],
+      pioggia: ['Yağmur: turuncu şemsiye, şekerler kuru.', 'Yağmur: siyah çizmeler ve büyülü su birikintileri.'],
+      temporale: ['Fırtına! Şekerlerimle battaniyenin altına saklanıyorum.', 'Gök gürültüsü ve şimşek: işte bu korkutucu.'],
+      neve: ['Kar: balkabağı kafalı bir kardan adam yaptım!', 'Kar yağıyor: turuncu eldivenler, sıcacık kanatlar.'],
+      nebbia: ['Sis: küçük bir hayalet var ama çok tatlı.', 'Hiçbir şey görmüyorum: iyi ki balkabağım yanıyor.'],
+      vento: ['Sert rüzgâr: şapkamı tutuyorum, şekerler uçuyor!', 'Rüzgâr: bugün kanat çırpmadan uçuyorum.'],
+      caldo: ['Kavurucu sıcak: balkabağı havuzu ve buzlu şeker.', 'Pelerin için çok sıcak: bugün atkı yok.'],
+      freddo: ['Dondurucu: battaniye, sıcak kakao ve marşmelov.', 'Sıfırın altı: kanatlar sıkıca kapalı.'],
+    },
+  },
 };
 
 export default tr;

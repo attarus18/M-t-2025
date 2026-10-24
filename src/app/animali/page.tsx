@@ -7,7 +7,7 @@ import { AnimalArt } from '@/components/animal-art';
 import { BuyButton } from '@/components/buy-button';
 import { usePurchases } from '@/context/purchases-context';
 import { useI18n } from '@/i18n';
-import { ANIMALS, comingSoonAnimals, type Animal } from '@/lib/animals';
+import { ANIMALS, comingSoonAnimals, isInSeason, seasonEnd, type Animal } from '@/lib/animals';
 import { CONDITIONS, CONDITION_INFO } from '@/lib/conditions';
 import { PACKS, getPack } from '@/lib/packs';
 import { useAnimal } from '@/lib/use-animal';
@@ -17,7 +17,7 @@ export default function AnimalsPage() {
   const { animal: current, setAnimal } = useAnimal();
   const { isAnimalUnlocked, isPackUnlocked, hasEveryPack } = usePurchases();
   const [preview, setPreview] = useState<Animal | null>(null);
-  const { t } = useI18n();
+  const { t, tag } = useI18n();
 
   return (
     <div className="space-y-6">
@@ -27,8 +27,10 @@ export default function AnimalsPage() {
       </header>
 
       {PACKS.map(pack => {
-        const animals = ANIMALS.filter(a => a.pack === pack.id);
+        const animals = ANIMALS.filter(a => a.pack === pack.id && isInSeason(a));
         const unlocked = isPackUnlocked(pack.id);
+        // Le feste fuori periodo non hanno animali: niente sezione vuota.
+        if (!animals.length && !comingSoonAnimals(pack.id).length) return null;
         return (
           <section key={pack.id} className="space-y-3">
             <div className="flex items-end justify-between gap-2">
@@ -81,6 +83,11 @@ export default function AnimalsPage() {
                     />
                     <span className="font-fun text-lg font-bold">{a.name}</span>
                     <span className="text-[11px] font-semibold leading-tight opacity-80">{a.tagline}</span>
+                    {a.season && (
+                      <span className="mt-1.5 rounded-full bg-orange-400 px-2 py-0.5 text-[10px] font-bold text-orange-950">
+                        {a.emoji} {t.animals.freeUntil(seasonEnd(a).toLocaleDateString(tag, { day: 'numeric', month: 'short' }))}
+                      </span>
+                    )}
                   </button>
                 );
               })}

@@ -33,6 +33,7 @@ const tr: Messages = {
     casa: { name: 'Ev Dostları', tagline: 'Kanepeden hava durumu' },
     esotici: { name: 'Egzotik', tagline: 'Dünyanın dört bir yanından hava durumu' },
     deserto: { name: 'Çöl ve Vaha', tagline: 'Kavurucu güneşin altından tahminler' },
+    feste: { name: 'Bayram konukları', tagline: 'Ücretsiz, ama sadece birkaç gün' },
   },
   home: {
     currentLocation: 'Mevcut konum',
@@ -90,6 +91,7 @@ const tr: Messages = {
     unlocked: 'Açıldı',
     toUnlock: 'Kilitli',
     comingSoon: 'Yakında',
+    freeUntil: (date: string) => `${date} tarihine kadar ücretsiz`,
     unlockPack: pack => `${pack} paketini aç`,
     allPacksDiscount: 'Tüm paketler indirimli',
     packLabel: pack => `${pack} paketi`,

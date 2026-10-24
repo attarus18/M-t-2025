@@ -818,6 +818,22 @@ const pt: AnimalTexts = {
       freddo: ['Geada: penas estufadas e pés debaixo do cobertor.', 'Abaixo de zero: hoje de manhã não tem corrida.'],
     },
   },
+  pipistrello: {
+    name: 'Morcego',
+    tagline: 'Doce ou previsão?',
+    phrases: {
+      sole: ['Sol? Óculos escuros e bora pedir doces!', 'Tempo bom: a abóbora está cheia e o céu limpo.'],
+      notte: ['Noite: finalmente minha vez! De cabeça para baixo e abóbora acesa.', 'Céu estrelado: hoje voo de porta em porta.'],
+      nuvoloso: ['Nublado: clima perfeito de Halloween.', 'Céu cinza: ideal para um morcego tímido.'],
+      pioggia: ['Chuva: guarda-chuva laranja e doces sequinhos.', 'Chuva: botas pretas e poças assombradas.'],
+      temporale: ['Tempestade! Me escondo debaixo do cobertor com os doces.', 'Trovões e raios: isso sim dá medo.'],
+      neve: ['Neve: fiz um boneco com cabeça de abóbora!', 'Nevando: luvas laranja e asas quentinhas.'],
+      nebbia: ['Neblina: tem um fantasminha, mas ele é legal.', 'Não vejo nada: ainda bem que minha abóbora está acesa.'],
+      vento: ['Vento forte: segurando o chapéu, os doces voam!', 'Rajadas: hoje voo sem bater as asas.'],
+      caldo: ['Calor escaldante: piscina de abóbora e picolé.', 'Quente demais para capa: hoje sem cachecol.'],
+      freddo: ['Gelo: cobertor, chocolate quente e marshmallow.', 'Abaixo de zero: asas bem fechadas.'],
+    },
+  },
 };
 
 export default pt;

@@ -15,6 +15,11 @@ export interface Animal {
   /** Descrizione in inglese usata nei prompt per generare le illustrazioni. */
   promptSubject: string;
   phrases: Record<ConditionId, string[]>;
+  /**
+   * Animali delle feste: disponibili solo tra queste date ("MM-GG", estremi
+   * inclusi), ogni anno. Fuori periodo spariscono e chi li usava torna al pollo.
+   */
+  season?: { from: string; to: string };
 }
 
 const BASE_ANIMALS: Animal[] = [
@@ -515,7 +520,25 @@ export const ANIMALS: Animal[] = ALL_ANIMALS.filter(a => hasImage(a.id, 'sole'))
 
 /** Animali del pacchetto non ancora disegnati: mostrati come "in arrivo". */
 export function comingSoonAnimals(pack: PackId): Animal[] {
-  return ALL_ANIMALS.filter(a => a.pack === pack && !hasImage(a.id, 'sole'));
+  return ALL_ANIMALS.filter(a => a.pack === pack && !a.season && !hasImage(a.id, 'sole'));
+}
+
+/** True se l'animale non e' stagionale o se oggi siamo nel suo periodo. */
+export function isInSeason(animal: Animal, now = new Date()) {
+  if (!animal.season) return true;
+  const pad = (n: number) => String(n).padStart(2, '0');
+  const today = `${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+  const { from, to } = animal.season;
+  // Periodi a cavallo dell'anno (es. 12-01 -> 01-06).
+  return from <= to ? today >= from && today <= to : today >= from || today <= to;
+}
+
+/** Ultimo giorno del periodo di un animale stagionale (quello in corso). */
+export function seasonEnd(animal: Animal, now = new Date()) {
+  const [m, d] = animal.season!.to.split('-').map(Number);
+  const end = new Date(now.getFullYear(), m - 1, d);
+  if (end < new Date(now.getFullYear(), now.getMonth(), now.getDate())) end.setFullYear(end.getFullYear() + 1);
+  return end;
 }
 
 export const DEFAULT_ANIMAL: AnimalId = 'pollo';

@@ -39,6 +39,7 @@ const ko: Messages = {
     casa: { name: '집 친구들', tagline: '소파에서 전하는 날씨' },
     esotici: { name: '이국 동물', tagline: '세계 곳곳에서 전하는 날씨' },
     deserto: { name: '사막과 오아시스', tagline: '뜨거운 태양 아래서 전하는 날씨' },
+    feste: { name: '시즌 게스트', tagline: '무료, 단 며칠 동안만' },
   },
   home: {
     currentLocation: '현재 위치',
@@ -96,6 +97,7 @@ const ko: Messages = {
     unlocked: '잠금 해제됨',
     toUnlock: '잠김',
     comingSoon: '곧 출시',
+    freeUntil: (date: string) => `${date}까지 무료`,
     unlockPack: pack => `${pack} 잠금 해제`,
     allPacksDiscount: '모든 팩 할인가로',
     packLabel: pack => `${pack} 팩`,

@@ -7,7 +7,7 @@ import { AnimalArt } from '@/components/animal-art';
 import { WeatherEffects } from '@/components/weather-effects';
 import { usePurchases } from '@/context/purchases-context';
 import { useI18n } from '@/i18n';
-import { ANIMALS, pickPhrase } from '@/lib/animals';
+import { ANIMALS, isInSeason, pickPhrase } from '@/lib/animals';
 import { CONDITIONS, CONDITION_INFO, type ConditionId } from '@/lib/conditions';
 import { getPack } from '@/lib/packs';
 import { useAnimal } from '@/lib/use-animal';
@@ -46,7 +46,7 @@ export default function PreviewPage() {
 
       {/* Selettore degli animali */}
       <div className="no-scrollbar -mx-4 mt-2 flex w-[calc(100%+2rem)] snap-x gap-2 overflow-x-auto px-4 pb-1">
-        {ANIMALS.map(a => {
+        {ANIMALS.filter(a => isInSeason(a)).map(a => {
           const active = a.id === animal.id;
           return (
             <button

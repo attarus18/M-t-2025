@@ -33,6 +33,7 @@ const pt: Messages = {
     casa: { name: 'Amigos de casa', tagline: 'A previsão direto do sofá' },
     esotici: { name: 'Exóticos', tagline: 'A previsão do resto do mundo' },
     deserto: { name: 'Deserto e Oásis', tagline: 'Previsões sob o sol escaldante' },
+    feste: { name: 'Convidados das festas', tagline: 'Grátis, mas só por poucos dias' },
   },
   home: {
     currentLocation: 'Localização atual',
@@ -90,6 +91,7 @@ const pt: Messages = {
     unlocked: 'Desbloqueado',
     toUnlock: 'Bloqueado',
     comingSoon: 'Em breve',
+    freeUntil: (date: string) => `Grátis até ${date}`,
     unlockPack: pack => `Desbloquear ${pack}`,
     allPacksDiscount: 'Todos os pacotes com desconto',
     packLabel: pack => `Pacote ${pack}`,

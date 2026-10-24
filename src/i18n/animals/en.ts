@@ -818,6 +818,22 @@ const en: AnimalTexts = {
       freddo: ['Freezing: puffed-up feathers and feet under a blanket.', 'Below zero: no running this morning.'],
     },
   },
+  pipistrello: {
+    name: 'Bat',
+    tagline: 'Trick or forecast?',
+    phrases: {
+      sole: ['Sunny? Shades on and off I go trick-or-treating!', 'Nice weather: the pumpkin\'s full and so is the sky.'],
+      notte: ['Night: finally my shift! Upside down with the pumpkin lit.', 'Starry sky: tonight I fly from door to door.'],
+      nuvoloso: ['Cloudy: perfect Halloween mood.', 'Grey sky: ideal for a shy bat.'],
+      pioggia: ['Rain: orange umbrella and dry candy.', 'Rain: black boots and spooky puddles.'],
+      temporale: ['Thunderstorm! Hiding under the blanket with my candy.', 'Thunder and lightning: now THAT\'s scary.'],
+      neve: ['Snow: I built a snowman with a pumpkin head!', 'Snowing: orange mittens and warm wings.'],
+      nebbia: ['Fog: there\'s a little ghost, but it\'s friendly.', 'Can\'t see a thing: good thing my pumpkin is lit.'],
+      vento: ['Strong wind: holding my hat, the candy is flying!', 'Gusts: today I fly without flapping.'],
+      caldo: ['Scorching heat: pumpkin pool and a popsicle.', 'Too hot for a cape: no scarf today.'],
+      freddo: ['Freezing: blanket, hot cocoa and a marshmallow.', 'Below zero: wings tightly wrapped.'],
+    },
+  },
 };
 
 export default en;

@@ -36,6 +36,7 @@ const it = {
     casa: { name: 'Amici di casa', tagline: 'Il meteo dal divano' },
     esotici: { name: 'Esotici', tagline: 'Meteo dal resto del mondo' },
     deserto: { name: 'Deserto e Oasi', tagline: 'Previsioni sotto il sole cocente' },
+    feste: { name: 'Ospiti delle feste', tagline: 'Gratis, ma solo per pochi giorni' },
   },
   home: {
     currentLocation: 'Posizione attuale',
@@ -93,6 +94,7 @@ const it = {
     unlocked: 'Sbloccato',
     toUnlock: 'Da sbloccare',
     comingSoon: 'In arrivo',
+    freeUntil: (date: string) => `Gratis fino al ${date}`,
     unlockPack: (pack: string) => `Sblocca ${pack}`,
     allPacksDiscount: 'Tutti i pacchetti a prezzo scontato',
     packLabel: (pack: string) => `Pacchetto ${pack}`,

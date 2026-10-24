@@ -478,4 +478,26 @@ export const EXTRA_ANIMALS: Animal[] = [
       freddo: ['Gelo: piume gonfie e zampe nella coperta.', 'Sotto zero: stamattina niente corsa.'],
     },
   },
+  // ---------------- Feste (gratis, solo nel loro periodo) ----------------
+  {
+    id: 'pipistrello',
+    name: 'Pipistrello',
+    emoji: '🦇',
+    pack: 'feste',
+    tagline: 'Dolcetto o previsione?',
+    promptSubject: 'a cute little purple bat with big pink ears, a witch hat with an orange band and an orange-and-black striped scarf, holding a jack-o\'-lantern candy bucket',
+    season: { from: '10-20', to: '11-05' },
+    phrases: {
+      sole: ['Sole? Occhiali scuri e via a fare dolcetto o scherzetto!', 'Bel tempo: la zucca è piena e il cielo pure.'],
+      notte: ['Notte: finalmente il mio turno! A testa in giù e zucca accesa.', 'Cielo stellato: stanotte volo di porta in porta.'],
+      nuvoloso: ['Nuvoloso: atmosfera perfetta da Halloween.', 'Cielo grigio: ideale per un pipistrello timido.'],
+      pioggia: ['Piove: ombrello arancione e caramelle all\'asciutto.', 'Pioggia: stivali neri e pozzanghere stregate.'],
+      temporale: ['Temporale! Mi nascondo sotto la coperta con le caramelle.', 'Tuoni e fulmini: questo sì che fa paura.'],
+      neve: ['Neve: ho fatto un pupazzo con la testa di zucca!', 'Nevica: guanti arancioni e ali al caldo.'],
+      nebbia: ['Nebbia: c\'è un fantasmino, ma è simpatico.', 'Non vedo niente: per fortuna ho la zucca accesa.'],
+      vento: ['Vento forte: tengo il cappello, le caramelle volano!', 'Raffiche: oggi si vola anche senza sbattere le ali.'],
+      caldo: ['Caldo torrido: piscina a forma di zucca e ghiacciolo.', 'Troppo caldo per il mantello: oggi niente sciarpa.'],
+      freddo: ['Gelo: coperta, cioccolata calda e un marshmallow.', 'Sotto zero: le ali le tengo ben chiuse.'],
+    },
+  },
 ];

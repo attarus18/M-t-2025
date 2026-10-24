@@ -1,7 +1,7 @@
 'use client';
 
 import { Capacitor } from '@capacitor/core';
-import { DEFAULT_ANIMAL, getAnimal, pickPhrase } from './animals';
+import { DEFAULT_ANIMAL, getAnimal, isInSeason, pickPhrase } from './animals';
 import { CONDITION_INFO, pickCondition } from './conditions';
 import type { SavedCity } from './location';
 import { ALL_PACKS_PRODUCT, getPack } from './packs';
@@ -55,6 +55,7 @@ export async function requestNotificationPermission(): Promise<boolean> {
 /** Animale da usare fuori da React: quello scelto, se il suo pacchetto risulta acquistato. */
 export function chosenAnimal() {
   const animal = getAnimal(getStored<string>(KEYS.animal, DEFAULT_ANIMAL));
+  if (!isInSeason(animal)) return getAnimal(DEFAULT_ANIMAL);
   const productId = getPack(animal.pack).productId;
   if (!productId) return animal;
   const owned = getStored<string[]>(KEYS.purchasesCache, []);
