@@ -38,8 +38,17 @@ const SNOW_NORMAL = new Set(['gatto', 'mucca', 'pecora', 'pinguino', 'pollo', 'r
 const isStrict = (animal, name) => STRICT.has(animal) || (name === 'neve' && !SNOW_NORMAL.has(animal)) || STRICT_SCENES.has(`${animal}/${name}`);
 // Scene con un buco di sfondo chiuso dal disegno (es. tra collo e zampa della
 // giraffa): il riempimento dai bordi non ci arriva, si tolgono le zone bianche grandi.
-const HOLE_SCENES = new Set(['giraffa/caldo', 'struzzo/pioggia', 'cammello/neve', 'cammello/vento', 'cammello/sole', 'cammello/caldo', 'cammello/pioggia', 'cammello/notte']);
+const HOLE_SCENES = new Set(['giraffa/caldo', 'struzzo/pioggia', 'cammello/neve', 'cammello/vento', 'cammello/sole', 'cammello/caldo', 'cammello/pioggia', 'cammello/notte', 'pollo/freddo', 'pollo/neve', 'pollo/notte', 'pollo/sole', 'pollo/vento']);
 const MIN_HOLE = 1500; // pixel: occhi e riflessi sono piu' piccoli
+// Vecchie JPG a 200px: il bianco tra le zampe e' rumoroso e la soglia stretta lo spezza in
+// frammenti. Qui i buchi si cercano con la soglia normale, solo se piccoli (non la pancia).
+const LOOSE_HOLES = new Set(['pollo/freddo', 'pollo/neve', 'pollo/notte', 'pollo/sole', 'pollo/vento']);
+// Buchi che non si separano dal disegno nemmeno cosi' (tra ombrello e testa del pollo il
+// bianco tocca la mano, bianca anche lei): poligono disegnato a mano, in frazioni
+// dell'immagine. Dentro si toglie tutto cio' che e' chiaro; i contorni restano.
+const HOLE_POLY = {
+  'pollo/pioggia': [[0.36, 0.33], [0.425, 0.33], [0.44, 0.36], [0.43, 0.41], [0.405, 0.47], [0.385, 0.495], [0.37, 0.45], [0.35, 0.42], [0.345, 0.39]],
+};
 // Zone (frazioni x0, y0, x1, y1, ed eventuale dimensione minima) in cui cercare i buchi,
 // se la scena ha altro bianco da salvare (il pupazzo di neve accanto al cammello).
 // Una zona stretta permette di togliere anche spiragli piccoli tra le zampe.
@@ -50,6 +59,11 @@ const HOLE_BOX = {
   'cammello/caldo': [[0.2, 0.35, 0.5, 0.65]],
   'cammello/pioggia': [[0.3, 0.35, 0.6, 0.65], [0.6, 0.7, 0.85, 0.95, 80]],
   'cammello/notte': [[0.5, 0.75, 0.75, 1, 80]],
+  'pollo/freddo': [[0.3, 0.88, 0.7, 1, 80]],
+  'pollo/neve': [[0.45, 0.7, 0.75, 1, 80]],
+  'pollo/notte': [[0.3, 0.75, 0.7, 1, 80]],
+  'pollo/sole': [[0.3, 0.75, 0.7, 1, 80]],
+  'pollo/vento': [[0.2, 0.75, 0.7, 1, 80]],
 };
 // Ombra grigia chiara sotto l'animale (tra le zampe del granchio): con la soglia normale
 // resta una macchia biancastra. Qui e' sfondo anche il grigio chiaro neutro.
@@ -197,7 +211,18 @@ function cleanEdge(data, width, height, depth) {
   }
 }
 
-function removeWhiteBackground(data, width, height, strict = false, holes = false, edgeDepth = 0, shadow = false, holeBoxes = [[0, 0, 1, 1]]) {
+/** Punto (x, y) dentro il poligono [[x, y], ...] (regola pari/dispari). */
+function inPolygon(x, y, poly) {
+  let inside = false;
+  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+    const [xi, yi] = poly[i];
+    const [xj, yj] = poly[j];
+    if (yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) inside = !inside;
+  }
+  return inside;
+}
+
+function removeWhiteBackground(data, width, height, strict = false, holes = false, edgeDepth = 0, shadow = false, holeBoxes = [[0, 0, 1, 1]], looseHoles = false, holePoly = null) {
   const isBg = strict
     ? i => isStrictBg(data, i) && data[i + 3] > 0
     : shadow
@@ -205,8 +230,9 @@ function removeWhiteBackground(data, width, height, strict = false, holes = fals
       : i => 255 * 3 - (data[i] + data[i + 1] + data[i + 2]) <= TOLERANCE * 3 && data[i + 3] > 0;
   if (holes) {
     const done = new Uint8Array(width * height);
+    const isHole = looseHoles ? isBg : i => isStrictBg(data, i);
     for (let s = 0; s < width * height; s++) {
-      if (done[s] || !isStrictBg(data, s * 4)) continue;
+      if (done[s] || !isHole(s * 4)) continue;
       const region = [];
       const todo = [s];
       done[s] = 1;
@@ -215,7 +241,7 @@ function removeWhiteBackground(data, width, height, strict = false, holes = fals
         region.push(p);
         const x = p % width;
         for (const q of [x > 0 ? p - 1 : -1, x < width - 1 ? p + 1 : -1, p - width, p + width]) {
-          if (q < 0 || q >= width * height || done[q] || !isStrictBg(data, q * 4)) continue;
+          if (q < 0 || q >= width * height || done[q] || !isHole(q * 4)) continue;
           done[q] = 1;
           todo.push(q);
         }
@@ -225,7 +251,7 @@ function removeWhiteBackground(data, width, height, strict = false, holes = fals
       cx /= region.length * width;
       cy /= region.length * height;
       const inBox = holeBoxes.some(([x0, y0, x1, y1, min = MIN_HOLE]) =>
-        region.length >= min && cx >= x0 && cx <= x1 && cy >= y0 && cy <= y1);
+        region.length >= min && (!looseHoles || region.length < width * height * 0.01) && cx >= x0 && cx <= x1 && cy >= y0 && cy <= y1);
       if (inBox) for (const p of region) data[p * 4 + 3] = 0;
     }
   }
@@ -246,6 +272,13 @@ function removeWhiteBackground(data, width, height, strict = false, holes = fals
     if (x < width - 1) stack.push(p + 1);
     if (y > 0) stack.push(p - width);
     if (y < height - 1) stack.push(p + width);
+  }
+  // Dopo il riempimento: attraverso il poligono arriverebbe alla mano.
+  if (holePoly) {
+    for (let p = 0; p < width * height; p++) {
+      const i = p * 4;
+      if (Math.min(data[i], data[i + 1], data[i + 2]) >= 215 && inPolygon((p % width) / width, ((p / width) | 0) / height, holePoly)) data[i + 3] = 0;
+    }
   }
   if (strict) removeSpecks(data, width, height);
   if (strict) {
@@ -308,7 +341,7 @@ for (const animal of fs.existsSync(SRC) ? fs.readdirSync(SRC) : []) {
     const { data, info } = await src.ensureAlpha().raw().toBuffer({ resolveWithObject: true });
     if (!alreadyTransparent) {
       const scene = `${animal}/${name}`;
-      removeWhiteBackground(data, info.width, info.height, isStrict(animal, name), HOLE_SCENES.has(scene), small ? 10 : 0, SHADOW_SCENES.has(scene), HOLE_BOX[scene]);
+      removeWhiteBackground(data, info.width, info.height, isStrict(animal, name), HOLE_SCENES.has(scene), small ? 10 : 0, SHADOW_SCENES.has(scene), HOLE_BOX[scene], LOOSE_HOLES.has(scene), HOLE_POLY[scene]);
       if (SHADOW_SCENES.has(scene)) removeLowShadows(data, info.width, info.height);
       if (FADE_SCENES.has(scene)) {
         fogToAlpha(data, info.width, info.height);
