@@ -2,7 +2,7 @@ NOME (max 30)
 Meteo Zoo
 
 DESCRIZIONE BREVE (max 80)
-Il meteo raccontato da 26 animali buffi, vestiti per ogni tempo che fa!
+Il meteo raccontato da 31 animali buffi, vestiti per ogni tempo che fa!
 
 DESCRIZIONE COMPLETA (max 4000)
 Che tempo fa? Chiedilo a un pollo con gli occhiali da sole!
@@ -16,7 +16,7 @@ Meteo Zoo trasforma le previsioni del tempo in un sorriso: un animale vestito a 
 • Qualità dell'aria
 • Dettaglio a schermo intero per ogni ora e ogni giorno
 
-🐔 26 ANIMALI METEOROLOGI
+🐔 31 ANIMALI METEOROLOGI
 Ogni animale ha 10 illustrazioni diverse, una per ogni situazione: sole, notte serena, nuvole, pioggia, temporale, neve, nebbia, vento, caldo torrido e gelo. E per ognuna, frasi buffe sempre nuove.
 
 🎁 PACCHETTI DI ANIMALI
@@ -26,6 +26,7 @@ Il pollo e il gatto sono gratis per tutti. Gli altri arrivano a pacchetti:
 • Bosco e Stagno: rana, volpe, riccio, gufo e scoiattolo
 • Amici di casa: cane, coniglio, criceto e pappagallo
 • Esotici: panda, scimmia, giraffa e leone
+• Deserto e Oasi: cammello, camaleonte, suricato, avvoltoio e struzzo
 
 Ogni pacchetto si compra una volta sola e resta tuo per sempre, senza abbonamenti. Con "Tutti i pacchetti" sblocchi ogni animale, anche quelli che arriveranno in futuro. Con qualsiasi acquisto sparisce anche la pubblicità.
 
