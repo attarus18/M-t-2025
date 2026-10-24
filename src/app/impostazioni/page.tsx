@@ -20,7 +20,7 @@ import type { UnitsPref } from '@/lib/units';
 import { useAnimal } from '@/lib/use-animal';
 import { cn } from '@/lib/utils';
 
-const APP_VERSION = '1.0.13';
+const APP_VERSION = '1.0.14';
 
 export default function SettingsPage() {
   const { hasAll, hasEveryPack, restore } = usePurchases();
