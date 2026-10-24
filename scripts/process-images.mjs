@@ -46,6 +46,25 @@ const LOOSE_HOLES = new Set(['pollo/freddo', 'pollo/neve', 'pollo/notte', 'pollo
 // Buchi che non si separano dal disegno nemmeno cosi' (tra ombrello e testa del pollo il
 // bianco tocca la mano, bianca anche lei): poligono disegnato a mano, in frazioni
 // dell'immagine. Dentro si toglie tutto cio' che e' chiaro; i contorni restano.
+// Ombra grigia sotto le zampe e alone rosato attorno (vecchie JPG del pollo): nella zona
+// (frazioni x0, y0, x1, y1) sotto il corpo restano solo le zampe arancioni e il contorno scuro.
+const GROUND_BOX = {
+  'pollo/freddo': [0.2, 0.89, 0.8, 1],
+  'pollo/neve': [0.45, 0.86, 0.95, 1],
+  'pollo/notte': [0.2, 0.885, 0.8, 1],
+  'pollo/sole': [0.2, 0.905, 0.8, 1],
+  'pollo/vento': [0.15, 0.885, 0.8, 1],
+};
+function clearGround(data, width, height, [x0, y0, x1, y1]) {
+  for (let y = Math.floor(y0 * height); y < Math.min(height, Math.ceil(y1 * height)); y++) {
+    for (let x = Math.floor(x0 * width); x < Math.min(width, Math.ceil(x1 * width)); x++) {
+      const i = (y * width + x) * 4;
+      const lo = Math.min(data[i], data[i + 1], data[i + 2]);
+      const hi = Math.max(data[i], data[i + 1], data[i + 2]);
+      if (hi - lo < 70 && hi >= 140) data[i + 3] = 0;
+    }
+  }
+}
 const HOLE_POLY = {
   'pollo/pioggia': [[0.36, 0.33], [0.425, 0.33], [0.44, 0.36], [0.43, 0.41], [0.405, 0.47], [0.385, 0.495], [0.37, 0.45], [0.35, 0.42], [0.345, 0.39]],
 };
@@ -343,6 +362,7 @@ for (const animal of fs.existsSync(SRC) ? fs.readdirSync(SRC) : []) {
       const scene = `${animal}/${name}`;
       removeWhiteBackground(data, info.width, info.height, isStrict(animal, name), HOLE_SCENES.has(scene), small ? 10 : 0, SHADOW_SCENES.has(scene), HOLE_BOX[scene], LOOSE_HOLES.has(scene), HOLE_POLY[scene]);
       if (SHADOW_SCENES.has(scene)) removeLowShadows(data, info.width, info.height);
+      if (GROUND_BOX[scene]) clearGround(data, info.width, info.height, GROUND_BOX[scene]);
       if (FADE_SCENES.has(scene)) {
         fogToAlpha(data, info.width, info.height);
         fadeBorders(data, info.width, info.height);
