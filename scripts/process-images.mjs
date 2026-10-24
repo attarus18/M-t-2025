@@ -38,14 +38,11 @@ const SNOW_NORMAL = new Set(['gatto', 'mucca', 'pecora', 'pinguino', 'pollo', 'r
 const isStrict = (animal, name) => STRICT.has(animal) || (name === 'neve' && !SNOW_NORMAL.has(animal)) || STRICT_SCENES.has(`${animal}/${name}`);
 // Scene con un buco di sfondo chiuso dal disegno (es. tra collo e zampa della
 // giraffa): il riempimento dai bordi non ci arriva, si tolgono le zone bianche grandi.
-const HOLE_SCENES = new Set(['giraffa/caldo', 'struzzo/pioggia', 'cammello/neve', 'cammello/vento', 'cammello/sole', 'cammello/caldo', 'cammello/pioggia', 'cammello/notte', 'pollo/freddo', 'pollo/neve', 'pollo/notte', 'pollo/sole', 'pollo/vento']);
+const HOLE_SCENES = new Set(['giraffa/caldo', 'struzzo/pioggia', 'cammello/neve', 'cammello/vento', 'cammello/sole', 'cammello/caldo', 'cammello/pioggia', 'cammello/notte', 'pollo/freddo', 'pollo/neve', 'pollo/notte', 'pollo/sole', 'pollo/vento', 'gatto/sole', 'gatto/nebbia', 'gatto/caldo']);
 const MIN_HOLE = 1500; // pixel: occhi e riflessi sono piu' piccoli
 // Vecchie JPG a 200px: il bianco tra le zampe e' rumoroso e la soglia stretta lo spezza in
 // frammenti. Qui i buchi si cercano con la soglia normale, solo se piccoli (non la pancia).
-const LOOSE_HOLES = new Set(['pollo/freddo', 'pollo/neve', 'pollo/notte', 'pollo/sole', 'pollo/vento']);
-// Buchi che non si separano dal disegno nemmeno cosi' (tra ombrello e testa del pollo il
-// bianco tocca la mano, bianca anche lei): poligono disegnato a mano, in frazioni
-// dell'immagine. Dentro si toglie tutto cio' che e' chiaro; i contorni restano.
+const LOOSE_HOLES = new Set(['pollo/freddo', 'pollo/neve', 'pollo/notte', 'pollo/sole', 'pollo/vento', 'gatto/sole', 'gatto/nebbia', 'gatto/caldo']);
 // Ombra grigia sotto le zampe e alone rosato attorno (vecchie JPG del pollo): nella zona
 // (frazioni x0, y0, x1, y1) sotto il corpo restano solo le zampe arancioni e il contorno scuro.
 const GROUND_BOX = {
@@ -65,8 +62,16 @@ function clearGround(data, width, height, [x0, y0, x1, y1]) {
     }
   }
 }
+// Buchi che non si separano dal disegno nemmeno cosi' (tra ombrello e testa del pollo il
+// bianco tocca la mano, bianca anche lei): poligoni disegnati a mano, in frazioni
+// dell'immagine. Dentro si toglie tutto cio' che e' chiaro; i contorni restano.
 const HOLE_POLY = {
-  'pollo/pioggia': [[0.36, 0.33], [0.425, 0.33], [0.44, 0.36], [0.43, 0.41], [0.405, 0.47], [0.385, 0.495], [0.37, 0.45], [0.35, 0.42], [0.345, 0.39]],
+  'pollo/pioggia': [[[0.36, 0.33], [0.425, 0.33], [0.44, 0.36], [0.43, 0.41], [0.405, 0.47], [0.385, 0.495], [0.37, 0.45], [0.35, 0.42], [0.345, 0.39]]],
+  'gatto/pioggia': [[[0.52, 0.2], [0.6, 0.235], [0.625, 0.28], [0.635, 0.4], [0.6, 0.38], [0.57, 0.33], [0.53, 0.245]]],
+  'gatto/neve': [
+    [[0.21, 0.66], [0.235, 0.64], [0.28, 0.68], [0.285, 0.75], [0.25, 0.76], [0.22, 0.72]],
+    [[0.405, 0.81], [0.435, 0.805], [0.445, 0.83], [0.44, 0.86], [0.42, 0.875], [0.405, 0.86]],
+  ],
 };
 // Zone (frazioni x0, y0, x1, y1, ed eventuale dimensione minima) in cui cercare i buchi,
 // se la scena ha altro bianco da salvare (il pupazzo di neve accanto al cammello).
@@ -83,6 +88,9 @@ const HOLE_BOX = {
   'pollo/notte': [[0.3, 0.75, 0.7, 1, 80]],
   'pollo/sole': [[0.3, 0.75, 0.7, 1, 80]],
   'pollo/vento': [[0.2, 0.75, 0.7, 1, 80]],
+  'gatto/sole': [[0.1, 0.5, 0.28, 0.85, 80]],
+  'gatto/nebbia': [[0.45, 0.7, 0.6, 0.95, 80]],
+  'gatto/caldo': [[0.27, 0.28, 0.36, 0.48, 80]],
 };
 // Ombra grigia chiara sotto l'animale (tra le zampe del granchio): con la soglia normale
 // resta una macchia biancastra. Qui e' sfondo anche il grigio chiaro neutro.
@@ -296,7 +304,7 @@ function removeWhiteBackground(data, width, height, strict = false, holes = fals
   if (holePoly) {
     for (let p = 0; p < width * height; p++) {
       const i = p * 4;
-      if (Math.min(data[i], data[i + 1], data[i + 2]) >= 215 && inPolygon((p % width) / width, ((p / width) | 0) / height, holePoly)) data[i + 3] = 0;
+      if (Math.min(data[i], data[i + 1], data[i + 2]) >= 215 && holePoly.some(poly => inPolygon((p % width) / width, ((p / width) | 0) / height, poly))) data[i + 3] = 0;
     }
   }
   if (strict) removeSpecks(data, width, height);
